@@ -9,12 +9,10 @@ import { ToastyConfig } from 'ng2-toasty';
 import { SlimLoadingBarService } from 'ng2-slim-loading-bar';
 
 @Component({
-  selector: 'pf-root',
+  selector: 'app-root',
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
-
-  title = 'pf';
 
   public isLoadingObs: Observable<boolean>;
   public isLoadingSubscription: Subscription;

@@ -10,7 +10,7 @@ import { NotFoundComponent } from './containers/not-found/not-found.component';
 import { MaterialComponentsModule } from '../material-module.module';
 // Services
 import { AuthGuard } from './services/auth.guard';
-import { RegisterComponent } from './containers/register/register.component';
+import { SignUpComponent } from './containers/sign-up/sign-up.component';
 
 @NgModule({
   imports: [
@@ -26,7 +26,7 @@ import { RegisterComponent } from './containers/register/register.component';
     MainComponent,
     LoginComponent,
     NotFoundComponent,
-    RegisterComponent],
+    SignUpComponent],
   exports: [
     MainComponent,
     LoginComponent,
