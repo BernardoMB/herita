@@ -1,6 +1,9 @@
 import { Component, OnInit, ElementRef, AfterViewInit } from '@angular/core';
 import * as $ from 'jquery';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
+import { IApplicationState } from '../../../store/models/app-state';
+import { Store } from '@ngrx/store';
 
 interface ILoginModel {
   username: string;
@@ -14,15 +17,21 @@ interface ILoginModel {
 })
 export class LoginComponent implements OnInit, AfterViewInit {
 
+  public userSubscription: Subscription;
   public formModel = {} as ILoginModel;
 
-  public hide: boolean;
+  public hide: boolean; // for showing the correct icon when displaying the password
   public showExternalContent: boolean = false;
   
-  constructor(private router: Router,
+  constructor(private store: Store<IApplicationState>,
+              private router: Router,
               private elementRef: ElementRef) {}
 
   ngOnInit() {
+    // If the property user of the uiState is not undefined, then navigate to home.
+    this.userSubscription = this.store.select(state => state.uiState.user).subscribe(user => {
+      if (user) this.router.navigate(['/']);   
+    });
   }
   
   ngAfterViewInit() {
