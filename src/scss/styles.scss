@@ -1,0 +1,21 @@
+/* You can add global styles to this file, and also import other style files */
+
+// Custom variables
+@import "custom-variables";
+
+html, body {
+    margin: 0px;
+}
+
+// SLim loading bar
+@import "slim-loading-bar";
+
+// THEMING
+// See the following guide for Angular Material theming
+// https://coursetro.com/posts/code/116/Create-your-own-Angular-5-Material-Theme
+
+// Add Angular Material prebuilt theme styles
+/* @import "~@angular/material/prebuilt-themes/indigo-pink.css"; */
+
+// Add Own Angular Material custom theme styles
+@import "theme";

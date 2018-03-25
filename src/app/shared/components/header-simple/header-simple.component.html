@@ -1,0 +1,17 @@
+<mat-toolbar color="primary" style="display: flex; justify-content: center;">
+    <div (click)="onGoToHomePage()" style="height: 32px; width: 32px; background: url(../../../../assets/images/header-icon-white.svg); background-size: 100% 100%;"></div>
+    <div (click)="toggleExternalContent()" style="position: absolute; left: 15px;">
+        <i class="fa fa-bars" style="color: white;" aria-hidden="true"></i>
+    </div>
+</mat-toolbar>
+
+<div *ngIf="showExternalContent">
+    <mat-toolbar  color="accent">
+        <mat-toolbar-row>
+            <span>First Row</span>
+        </mat-toolbar-row>
+        <mat-toolbar-row>
+            <span>About</span>
+        </mat-toolbar-row>
+    </mat-toolbar>
+</div>
