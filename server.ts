@@ -1,5 +1,5 @@
 // Set environment variables.
-const env = process.env.NODE_ENV || 'development';
+/* const env = process.env.NODE_ENV || 'development';
 console.log('Environment', env);
 if (env === 'development' || env === 'test') {
     const config = require('./src/server/config/config.json');
@@ -7,7 +7,8 @@ if (env === 'development' || env === 'test') {
     Object.keys(envConfig).forEach((key) => {
         process.env[key] = envConfig[key];
     });
-}
+} */
+require('./src/server/config/config.ts');
 
 import * as express from 'express';
 import * as path from 'path';
