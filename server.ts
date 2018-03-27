@@ -17,7 +17,7 @@ const _ = require('lodash');
 
 const { mongoose } = require('./src/server/db/mongoose');
 import { Application } from 'express';
-import { IUser } from 'shared/models/IUser';
+import { IUser } from './src/shared/models/IUser';
 import User from './src/server/models/user';
 
 var app: Application = express();
