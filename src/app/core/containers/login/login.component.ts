@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { IApplicationState } from '../../../store/models/app-state';
 import { Store } from '@ngrx/store';
+import { UserLoginAttemptAction } from '../../../store/actions/uiState.actions';
 
 interface ILoginModel {
   username: string;
@@ -30,7 +31,13 @@ export class LoginComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     // If the property user of the uiState is not undefined, then navigate to home.
     this.userSubscription = this.store.select(state => state.uiState.user).subscribe(user => {
-      if (user) this.router.navigate(['/']);   
+      if (user) {
+        console.log('Login: Found user in uiState', user);
+        console.log('Login: Redirecting to "/"');
+        this.router.navigate(['/']);
+      }
+      console.log('Login: No user in uiState');
+      console.log('Login: User must enter credentials');
     });
   }
   
@@ -50,10 +57,12 @@ export class LoginComponent implements OnInit, AfterViewInit {
     if (isValid) {
       console.log('Submited', form);
       const user = {
+        _id: undefined,
         username: form.username,
-        password: form.password
+        password: form.password,
+        rol: undefined
       }
-      //this.store.dispatch(new UserLoginAttemptAction(user));
+      this.store.dispatch(new UserLoginAttemptAction(user));
     }
   }
 

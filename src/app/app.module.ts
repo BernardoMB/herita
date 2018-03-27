@@ -11,6 +11,7 @@ import { ToastyModule } from 'ng2-toasty';
 import { DndModule } from 'ng2-dnd'; // Drag and drop
 import { Ng2CompleterModule } from 'ng2-completer';
 import { CoreModule } from './core/core.module';
+import { CookieModule } from 'ngx-cookie';
 
 
 @NgModule({
@@ -24,12 +25,7 @@ import { CoreModule } from './core/core.module';
     // My modules
     CoreModule.forRoot(),
     // NgRx
-    NgRxModule,
-    // Nice features
-    SlimLoadingBarModule.forRoot(),
-    ToastyModule.forRoot(),
-    DndModule.forRoot(),
-    Ng2CompleterModule,
+    NgRxModule
   ],
   providers: [],
   bootstrap: [AppComponent]

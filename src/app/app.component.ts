@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { IApplicationState } from './store/models/app-state';
 import { Store } from '@ngrx/store';
-import { UiStateTestAction, ToggleIsLoadingAction } from './store/actions/uiState.actions';
+import { UiStateTestAction, ToggleIsLoadingAction, UserLoggedInAction } from './store/actions/uiState.actions';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { mapStateToUiStateTestPropperty } from './store/mappers/test-mappers';
 import { ToastyConfig } from 'ng2-toasty';
 import { SlimLoadingBarService } from 'ng2-slim-loading-bar';
+import { CookieService } from 'ngx-cookie';
+import { IUser } from '../shared/models/IUser';
 
 @Component({
   selector: 'app-root',
@@ -22,10 +24,18 @@ export class AppComponent implements OnInit {
   public testStringSubscription: Subscription;
 
   constructor (
+    private cookieService: CookieService,
     private store: Store<IApplicationState>,
     private toastyConfig: ToastyConfig,
     private slimLoadingBarService: SlimLoadingBarService
   ) {
+    const usr = this.cookieService.getObject('usr');
+    if (usr) {
+      console.log('AppComponent: User found in cookies', usr);
+      this.store.dispatch(new UserLoggedInAction(<IUser>usr));
+    } else {
+      console.log('AppComponent: No user found in cookies');
+    }
     toastyConfig.theme = 'material';
   }
 

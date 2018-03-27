@@ -1,22 +1,33 @@
-import * as path from 'path';
+// Set environment variables.
+const env = process.env.NODE_ENV || 'development';
+if (env === 'development' || env === 'test') {
+    const config = require('./src/server/config/config.json');
+    const envConfig = config[env];
+    Object.keys(envConfig).forEach((key) => {
+        process.env[key] = envConfig[key];
+    });
+}
+
 import * as express from 'express';
+import * as path from 'path';
 const cors = require('cors');
+var bodyParser = require('body-parser');
+var { ObjectID } = require('mongodb');
+const _ = require('lodash');
 
-import { Db } from './src/server/data-access/config';
-import { Api } from './src/server/routes/base/Api';
-import { Middlewares } from './src/server/routes/middlewares/middlewares';
+const { mongoose } = require('./src/server/db/mongoose');
+import { Application } from 'express';
+import { IUser } from 'shared/models/IUser';
+import User from './src/server/models/user';
 
-const PORT = process.env.PORT || 300;
-const app: express.Application = express();
-const db = new Db();
+var app: Application = express();
+var port = process.env.PORT;
 
 app.use(cors());
 
-// Connect to the mongodb database
-db.connect();
-
-// Initialize api middlewares
-Middlewares.initialize(app);
+// Middleware.
+//var {authenticate} = require('./middleware/authenticate');
+app.use(bodyParser.json());
 
 app.use(function(req, res, next) {
     // set headers to allow cross origin request.
@@ -26,14 +37,53 @@ app.use(function(req, res, next) {
     next();
 });
 
-// Initialize all api routes
-Api.initialize(app);
+// Run the app by serving the static files in the dist directory.
+app.use(express.static(__dirname + '/dist'));
 
-// Serve the angular client when no other routes are matched
-app.use(express.static(path.join(__dirname, 'dist')));
+// For all GET requests, send back index.html so that Angular's PathLocationStrategy can be used.
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, '/dist/index.html'));
+});
 
-// If no API Route was matched, handle control to Angular Application
-app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'dist/index.html')));
+app.post('/users', (request, response) => {
+    var body = _.pick(request.body, ['username', 'password', 'rol']);
+    var user = new User(body);
+    // Save the incomin user from the request.
+    user.save().then((doc) => {
+        // return a promise whose resolve case gives us the token just created.
+        response.send(doc);
+    }).catch((error) => {
+        response.status(400).send(error);
+    });
+});
 
-app.listen(PORT, () => console.log(`Server is now running @ port: ${PORT}`));
 
+app.post('/api/users/login', (request, response) => {
+    /* var body = _.pick(request.body, ['email', 'password']);
+    // We will use a custom model method.
+    User.findByCredentials(body.email, body.password).then((user) => {
+      // Send Back the user.
+      //response.status(200).send(user);
+      // Better do the following.
+      return user.generateAuthToken().then((token) => {
+        response.header('x-auth', token).send(user);
+      });
+    }).catch((e) => {
+      response.status(400).send();
+    }); */
+    const fakeUser: IUser = {
+        _id: '123',
+        username: 'Omonopineme',
+        password: '9058',
+        rol: 1
+    }
+    response.send();
+});
+
+
+app.listen(port, () => {
+    console.log(`App started on port: ${port}`);
+});
+
+// Export the module.
+module.exports = {app};

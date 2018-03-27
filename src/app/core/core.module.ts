@@ -11,6 +11,13 @@ import { MaterialComponentsModule } from '../material-module.module';
 // Services
 import { AuthGuard } from './services/auth.guard';
 import { SignUpComponent } from './containers/sign-up/sign-up.component';
+// Nice features
+import { CookieModule } from 'ngx-cookie';
+import { SlimLoadingBarModule } from 'ng2-slim-loading-bar';
+import { ToastyModule } from 'ng2-toasty';
+import { DndModule } from 'ng2-dnd';
+import { Ng2CompleterModule } from 'ng2-completer';
+import { UserService } from './services/user.service';
 
 @NgModule({
   imports: [
@@ -20,7 +27,13 @@ import { SignUpComponent } from './containers/sign-up/sign-up.component';
     // Material components
     MaterialComponentsModule,
     // My components
-    SharedModule
+    SharedModule,
+    // Nice features
+    CookieModule.forRoot(),
+    SlimLoadingBarModule.forRoot(),
+    ToastyModule.forRoot(),
+    DndModule.forRoot(),
+    Ng2CompleterModule,
   ],
   declarations: [
     MainComponent,
@@ -30,7 +43,13 @@ import { SignUpComponent } from './containers/sign-up/sign-up.component';
   exports: [
     MainComponent,
     LoginComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    // Nice features
+    CookieModule,
+    SlimLoadingBarModule,
+    ToastyModule,
+    DndModule,
+    Ng2CompleterModule
   ]
 })
 export class CoreModule {
@@ -44,7 +63,7 @@ export class CoreModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: CoreModule,
-      providers: [AuthGuard]
+      providers: [AuthGuard, UserService]
     };
   }
 

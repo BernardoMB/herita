@@ -4,14 +4,19 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ts-node ./server.ts",
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "serve-devices": "ng serve --host 0.0.0.0 --disable-host-check",
     "server": "./node_modules/.bin/ts-node ./server.ts",
-    "server-watch": "./node_modules/.bin/nodemon -2 \"./src/server\" --ext \".ts\" --exec \"npm run server\" "
+    "server-watch": "./node_modules/.bin/nodemon -2 \"./server\" --ext \".ts\" --exec \"npm run server\" ",
+    "postinstall": "ng build --aot -prod"
+  },
+  "engines": {
+    "node": "8.9.3",
+    "npm": "5.5.1"
   },
   "private": true,
   "dependencies": {
@@ -48,6 +53,7 @@
     "ng2-dnd": "^5.0.2",
     "ng2-slim-loading-bar": "^4.0.0",
     "ng2-toasty": "^4.0.3",
+    "ngx-cookie": "^1.0.0",
     "npm": "^5.7.1",
     "rxjs": "5.5.2",
     "zone.js": "0.8.18"

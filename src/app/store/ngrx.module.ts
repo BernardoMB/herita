@@ -3,6 +3,8 @@ import { StoreModule } from '@ngrx/store';
 import { reducers } from './reducers/app-reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { TestEffectService } from './effects/test-effect.service';
+import { UserEffectService } from './effects/user-effect.service';
+import { CookieService, CookieOptionsProvider } from 'ngx-cookie';
 
 @NgModule({
     declarations: [ ],
@@ -11,7 +13,8 @@ import { TestEffectService } from './effects/test-effect.service';
         StoreModule.forRoot(reducers),
         // Register effects
         EffectsModule.forRoot([
-            TestEffectService
+            TestEffectService,
+            UserEffectService
         ])
     ],
     providers: [],
