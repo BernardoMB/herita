@@ -35,44 +35,46 @@ app.get('/*', (req, res) => {
 });
 
 //#region API Routes
-    app.post('/api/users', (request, response) => {
-        var body = _.pick(request.body, ['username', 'email', 'password', 'rol']);
-        var user: any = new User(body);
-        // Save the incoming user from the request.
-        user.save().then(() => {
-            // return a promise whose resolve case gives us the token just created.
-            return user.generateAuthToken();
-        }).then(token => {
-            // Respond to the client sending back the token in the 'x-auth' header.
-            response.header('x-auth', token).send(user);
-        }).catch((error) => {
-            response.status(400).send(error);
-        });
+app.post('/api/users', (request, response) => {
+    var body = _.pick(request.body, ['username', 'email', 'password', 'rol']);
+    var user: any = new User(body);
+    // Save the incoming user from the request.
+    user.save().then(() => {
+        // return a promise whose resolve case gives us the token just created.
+        return user.generateAuthToken();
+    }).then(token => {
+        // Respond to the client sending back the token in the 'x-auth' header.
+        response.header('x-auth', token).send(user);
+    }).catch((error) => {
+        response.status(400).send(error);
     });
+});
 
-
-    app.post('/api/users/login', (request, response) => {
-        /* var body = _.pick(request.body, ['email', 'password']);
-        // We will use a custom model method.
-        User.findByCredentials(body.email, body.password).then((user) => {
+// POST /api/users/login
+// Every time a user logs in a new token will be generated for that user.
+app.post('/api/users/login', (request, response) => {
+    var body = _.pick(request.body, ['username', 'email', 'password']);
+    // We will use a custom model method.
+    (<any>User).findByCredentials(body.username, body.email, body.password).then((user) => {
         // Send Back the user.
         //response.status(200).send(user);
         // Better do the following.
         return user.generateAuthToken().then((token) => {
             response.header('x-auth', token).send(user);
         });
-        }).catch((e) => {
+    }).catch((e) => {
         response.status(400).send();
-        }); */
-        const fakeUser: IUser = {
-            _id: '123',
-            email: 'bmondragonbrozon@gmail.com',
-            username: 'Omonopineme',
-            password: '9058',
-            rol: 1
-        }
-        response.send();
     });
+});
+
+// DELETE /api/users/me/token
+app.delete('/users/me/token', authenticate, (request: any, res) => {
+    request.user.removeToken(request.token).then(() => {
+        res.status(200).send();
+    }, () => {
+        res.status(400).send();
+    });
+});
 //#endregion
 
 app.listen(port, () => {

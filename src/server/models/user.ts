@@ -123,9 +123,12 @@ UserSchema.statics.findByToken = function (token) {
     });
 };
 
-UserSchema.statics.findByCredentials = function (email, password) {
+UserSchema.statics.findByCredentials = function (username, email, password) {
     var User = this;
-    return User.findOne({ email }).then((user) => {
+    return User.findOne({$or: [
+        {username: username},
+        {email: email}
+    ]}).then((user) => {
         if (!user) {
             return Promise.reject(null);
         }
