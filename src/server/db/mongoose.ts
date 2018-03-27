@@ -1,3 +1,5 @@
+import * as process from 'process';
+
 var mongoose = require('mongoose');
 
 // Tell mongoose to use promises.
