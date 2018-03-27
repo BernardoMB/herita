@@ -1,37 +1,24 @@
-// Set environment variables.
-/* const env = process.env.NODE_ENV || 'development';
-console.log('Environment', env);
-if (env === 'development' || env === 'test') {
-    const config = require('./src/server/config/config.json');
-    const envConfig = config[env];
-    Object.keys(envConfig).forEach((key) => {
-        process.env[key] = envConfig[key];
-    });
-} */
 require('./src/server/config/config.ts');
 
 import * as express from 'express';
 import * as path from 'path';
-const cors = require('cors');
-var bodyParser = require('body-parser');
+
+var { authenticate } = require('./src/server/middleware/authenticate');
+const { mongoose } = require('./src/server/db/mongoose');
 var { ObjectID } = require('mongodb');
+var bodyParser = require('body-parser');
+const cors = require('cors');
 const _ = require('lodash');
 
-const { mongoose } = require('./src/server/db/mongoose');
-import { Application } from 'express';
 import { IUser } from './src/shared/models/IUser';
 import User from './src/server/models/user';
 
-var app: Application = express();
+var app: express.Application = express();
 var port = process.env.PORT;
 
-app.use(cors());
-
-// Middleware.
-//var {authenticate} = require('./middleware/authenticate');
 app.use(bodyParser.json());
-
-app.use(function(req, res, next) {
+app.use(cors());
+app.use(function (req, res, next) {
     // set headers to allow cross origin request.
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
@@ -47,45 +34,50 @@ app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, '/dist/index.html'));
 });
 
-app.post('/users', (request, response) => {
-    var body = _.pick(request.body, ['username', 'password', 'rol']);
-    var user = new User(body);
-    // Save the incomin user from the request.
-    user.save().then((doc) => {
-        // return a promise whose resolve case gives us the token just created.
-        response.send(doc);
-    }).catch((error) => {
-        response.status(400).send(error);
+//#region API Routes
+    app.post('/api/users', (request, response) => {
+        var body = _.pick(request.body, ['username', 'email', 'password', 'rol']);
+        var user: any = new User(body);
+        // Save the incoming user from the request.
+        user.save().then(() => {
+            // return a promise whose resolve case gives us the token just created.
+            return user.generateAuthToken();
+        }).then(token => {
+            // Respond to the client sending back the token in the 'x-auth' header.
+            response.header('x-auth', token).send(user);
+        }).catch((error) => {
+            response.status(400).send(error);
+        });
     });
-});
 
 
-app.post('/api/users/login', (request, response) => {
-    /* var body = _.pick(request.body, ['email', 'password']);
-    // We will use a custom model method.
-    User.findByCredentials(body.email, body.password).then((user) => {
-      // Send Back the user.
-      //response.status(200).send(user);
-      // Better do the following.
-      return user.generateAuthToken().then((token) => {
-        response.header('x-auth', token).send(user);
-      });
-    }).catch((e) => {
-      response.status(400).send();
-    }); */
-    const fakeUser: IUser = {
-        _id: '123',
-        username: 'Omonopineme',
-        password: '9058',
-        rol: 1
-    }
-    response.send();
-});
-
+    app.post('/api/users/login', (request, response) => {
+        /* var body = _.pick(request.body, ['email', 'password']);
+        // We will use a custom model method.
+        User.findByCredentials(body.email, body.password).then((user) => {
+        // Send Back the user.
+        //response.status(200).send(user);
+        // Better do the following.
+        return user.generateAuthToken().then((token) => {
+            response.header('x-auth', token).send(user);
+        });
+        }).catch((e) => {
+        response.status(400).send();
+        }); */
+        const fakeUser: IUser = {
+            _id: '123',
+            email: 'bmondragonbrozon@gmail.com',
+            username: 'Omonopineme',
+            password: '9058',
+            rol: 1
+        }
+        response.send();
+    });
+//#endregion
 
 app.listen(port, () => {
     console.log(`App started on port: ${port}`);
 });
 
 // Export the module.
-module.exports = {app};
+module.exports = { app };
