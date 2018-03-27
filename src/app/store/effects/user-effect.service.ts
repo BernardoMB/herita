@@ -55,10 +55,10 @@ export class UserEffectService {
             this.cookieService.putObject('usr', action.payload, { expires: moment().hours(11).minute(59).second(59).toDate() });
             setTimeout(() => {
                 this.toastyService.success({
-                    title: 'Session started',
+                    title: 'Logged in',
                     msg: `${moment().locale('US').calendar()}`,
                     showClose: true,
-                    timeout: 2000
+                    timeout: 5000
                 });
             }, 0);
         });
