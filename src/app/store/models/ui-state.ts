@@ -1,7 +1,9 @@
+import { IUser } from "../../../shared/models/IUser";
+
 export interface IUIState {
     uiStateTestProperty: string;
     isLoading: boolean;
-    user: any;
+    user: IUser;
 }
 
 export const INITIAL_UI_STATE: IUIState = {

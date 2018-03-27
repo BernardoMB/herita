@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   public userSubscription: Subscription;
   public formModel = {} as ILoginModel;
 
-  public hide: boolean; // for showing the correct icon when displaying the password
+  public hide: boolean = true; // for showing the correct icon when displaying the password
   public showExternalContent: boolean = false;
   
   constructor(private store: Store<IApplicationState>,
@@ -55,14 +55,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   public onLogIn(form: ILoginModel, isValid: boolean): void {
     if (isValid) {
-      console.log('Submited', form);
-      const user = {
-        _id: undefined,
+      const credentials = {
         username: form.username,
-        password: form.password,
-        rol: undefined
+        password: form.password
       }
-      this.store.dispatch(new UserLoginAttemptAction(user));
+      this.store.dispatch(new UserLoginAttemptAction(credentials));
     }
   }
 

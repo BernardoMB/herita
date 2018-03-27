@@ -7,7 +7,9 @@ import { UIActions,
     USER_LOGIN_ATTEMPT_ACTION,
     UserLoginAttemptAction, 
     USER_LOGGED_IN_ACTION,
-    UserLoggedInAction} from '../actions/uiState.actions';
+    UserLoggedInAction,
+    ERROR_OCURRED_ACTION,
+    ErrorOcurredAction} from '../actions/uiState.actions';
 
 export function uiStateReducer(state: IUIState = INITIAL_UI_STATE, action: UIActions): IUIState {
     switch (action.type) {
@@ -19,6 +21,8 @@ export function uiStateReducer(state: IUIState = INITIAL_UI_STATE, action: UIAct
             return handleUserLoginAttemptAction(state, action);
         case USER_LOGGED_IN_ACTION:
             return handleUserLoggedInAction(state, action);
+        case ERROR_OCURRED_ACTION: 
+            return handleErrorOcurredAction(state, action);
         default:
             return state;
     }
@@ -45,5 +49,10 @@ function handleUserLoginAttemptAction(state: IUIState, action: UserLoginAttemptA
 function handleUserLoggedInAction(state: IUIState, action: UserLoggedInAction): IUIState {
     const newUiState = Object.assign({}, state, { isLoading: false});
     newUiState.user = action.payload;
+    return newUiState;
+}
+
+function handleErrorOcurredAction(state: IUIState, action: ErrorOcurredAction): IUIState {
+    const newUiState = Object.assign({}, state, { isLoading: false});
     return newUiState;
 }

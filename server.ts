@@ -57,14 +57,11 @@ app.post('/api/users/login', (request, response) => {
     // We will use a custom model method.
     (<any>User).findByCredentials(body.username, body.email, body.password).then((user) => {
         // Send Back the user.
-        //response.status(200).send(user);
-        // Better do the following.
         return user.generateAuthToken().then((token) => {
-            response.header('x-auth', token).send(user);
+            response.header('x-auth', token).status(200).send(user);
         });
     }).catch((error) => {
-        console.log(error);
-        response.status(400).send();
+        response.status(404).send(error);
     });
 });
 

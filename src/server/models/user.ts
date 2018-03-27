@@ -130,7 +130,7 @@ UserSchema.statics.findByCredentials = function (username, email, password) {
         {email: email}
     ]}).then((user) => {
         if (!user) {
-            return Promise.reject('No user found');
+            return Promise.reject('That username does not exists');
         }
         return new Promise((resolve, reject) => {
             // Use bcrypt.compare to compare password and user.password
@@ -138,7 +138,7 @@ UserSchema.statics.findByCredentials = function (username, email, password) {
                 if (result) {
                     resolve(user);
                 } else {
-                    reject();
+                    reject('Incorrect password');
                 }
             });
         });
