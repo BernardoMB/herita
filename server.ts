@@ -62,7 +62,8 @@ app.post('/api/users/login', (request, response) => {
         return user.generateAuthToken().then((token) => {
             response.header('x-auth', token).send(user);
         });
-    }).catch((e) => {
+    }).catch((error) => {
+        console.log(error);
         response.status(400).send();
     });
 });
