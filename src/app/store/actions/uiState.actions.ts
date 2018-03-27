@@ -17,7 +17,7 @@ export class ToggleIsLoadingAction implements Action {
     export const USER_LOGIN_ATTEMPT_ACTION = 'USER_LOGIN_ATTEMPT_ACTION';
     export class UserLoginAttemptAction implements Action {
         readonly type = USER_LOGIN_ATTEMPT_ACTION;
-        constructor(public payload: IUser) { }
+        constructor(public payload: any) { }
     }
 
     export const USER_LOGGED_IN_ACTION = 'USER_LOGGED_IN_ACTION';
