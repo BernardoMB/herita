@@ -36,4 +36,8 @@ export class HeaderSimpleComponent implements OnInit {
     this.router.navigate(['/login']);
     this.store.dispatch(new UserLoggedOutAction());
   }
+
+  public onAbout(): void {
+    this.router.navigate(['/about']);
+  }
 }

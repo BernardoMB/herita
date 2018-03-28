@@ -27,28 +27,28 @@ export class UserEffectService {
             });
         })
         .switchMap((action: any) => this.userService.login(action.payload)
-            .debug("Effect: Login attempt server response")
-            .map(res => {
-                console.log('Effect: catched response', res);
-                if (res.status == 200) {
-                    const response = JSON.parse(res._body);
-                    const user: IUser = {
-                        _id: response._id,
-                        username: response.username,
-                        email: response.email,
-                        password: response.password,
-                        rol: response.rol
-                    }
-                    return new UserLoggedInAction(user);
-                } else {
-                    return new ErrorOcurredAction(res._body);
+            
+        ).debug("Effect: Login attempt server response")
+        .map(res => {
+            console.log('Effect: mapped response', res);
+            if (res.status == 200) {
+                const response = JSON.parse(res._body);
+                const user: IUser = {
+                    _id: response._id,
+                    username: response.username,
+                    email: response.email,
+                    password: response.password,
+                    rol: response.rol
                 }
-            })
-            .catch(err => {
-                console.log('Effect: catched error', err);
-                return Observable.of(new ErrorOcurredAction(err._body))
-            })
-        );
+                return new UserLoggedInAction(user);
+            } else {
+                return new ErrorOcurredAction(res._body);
+            }
+        })
+        .catch(err => {
+            console.log('Effect: catched error', err);
+            return Observable.of(new ErrorOcurredAction(err._body))
+        });
         
 
     @Effect({ dispatch: false })
@@ -56,7 +56,9 @@ export class UserEffectService {
         .ofType(USER_LOGGED_IN_ACTION)
         .debug("Effect: User logged in")
         .do((action: any) => {
-            this.cookieService.putObject('usr', action.payload, { expires: moment().hours(11).minute(59).second(59).toDate() });
+            this.cookieService.putObject('usr', action.payload, { /* expires: moment().hours(11).minute(59).second(59).toDate() */ });
+            const usr = this.cookieService.getObject('usr');
+            console.log('Effect: placed user cookie', usr);
             setTimeout(() => {
                 this.toastyService.success({
                     title: 'Logged in',
@@ -73,8 +75,8 @@ export class UserEffectService {
         .debug("User logged out")
         .do(action => {
             this.cookieService.remove('usr');
-            this.toastyService.info({
-                title: 'Logging out',
+            this.toastyService.success({
+                title: 'Logged out',
                 msg: `${moment().locale('US').calendar()}`,
                 showClose: true,
                 timeout: 3000
@@ -99,7 +101,8 @@ export class UserEffectService {
         public toastyConfig: ToastyConfig,
         private cookieService: CookieService,
         private http: Http,
-        private userService: UserService) {
+        private userService: UserService)
+    {
         this.toastyConfig.theme = 'material';
         this.toastyConfig.position = 'bottom-center';
     }

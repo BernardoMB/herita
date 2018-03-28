@@ -23,8 +23,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   public formModel = {} as ILoginModel;
 
   public hide: boolean = true; // for showing the correct icon when displaying the password
-  public showExternalContent: boolean = false;
-
+  
   public loginErrorOcurred: boolean = false;
   public loginTypeError: number;
   public loginErrorMessage: string;
@@ -55,14 +54,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
   
   ngAfterViewInit() {
     this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#fafafa';
-  }
-
-  public toggleExternalContent(): void {
-    if (this.showExternalContent) {
-      this.showExternalContent = false;
-    } else {
-      this.showExternalContent = true;
-    }
   }
 
   public onLogIn(form: ILoginModel, isValid: boolean): void {

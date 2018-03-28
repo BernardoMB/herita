@@ -1,3 +1,49 @@
-<p>
-  sign-up works!
-</p>
+<header-simple></header-simple>
+
+<div style="display: flex; justify-content: center; font: 500 20px/32px Roboto, 'Helvetica Neue', sans-serif;">
+  <div style="margin-top: 30px; ">Sign up</div>
+</div>
+
+<form #f="ngForm" (ngSubmit)="onSignUp(f.value, f.valid)">
+  <div style="display: flex; justify-content: center;">
+      <div style="position: relative; width: 100%; max-width: 500px; display: flex; flex-direction: column; padding-left: 30px; padding-right: 30px;">
+          <mat-form-field [hideRequiredMarker]="true" [floatLabel]="'auto'" [color]="'accent'" style="width: 100%;">
+              <input name="username" #username="ngModel" [(ngModel)]="formModel.username" matInput placeholder="Username" required>
+          </mat-form-field>
+          
+          <mat-form-field [hideRequiredMarker]="true" [floatLabel]="'auto'" [color]="'accent'" style="width: 100%;">
+              <input name="email" #email="ngModel" [(ngModel)]="formModel.email" matInput placeholder="Email" required>
+          </mat-form-field>
+          
+          <mat-form-field [hideRequiredMarker]="true" [color]="'accent'" style="width: 100%;">
+              <input name="password" #password="ngModel" [(ngModel)]="formModel.password" matInput placeholder="Password" [type]="hide ? 'password' : 'text'" required>
+              <mat-icon style="color: grey; cursor:pointer;" matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+          </mat-form-field>
+          
+          <mat-form-field [hideRequiredMarker]="true" [color]="'accent'" style="width: 100%;">
+              <input name="passwordConfirmation" #passwordConfirmation="ngModel" [(ngModel)]="formModel.passwordConfirmation" matInput placeholder="Password confirmation" [type]="hide ? 'password' : 'text'" required>
+              <mat-icon style="color: grey; cursor:pointer;" matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+          </mat-form-field>
+
+          <!-- TODO: Registration error -->
+          <!-- <div style="position:absolute; bottom: -8px; height:20px;">
+            <span *ngIf="loginErrorOcurred" style="color: red; font: 500 11px/20px Roboto, 'Helvetica Neue', sans-serif;"><i class="fas fa-exclamation-circle"></i> {{loginErrorMessage}}</span>
+          </div> -->
+      </div>
+  </div>
+  
+  <div style="display: flex; justify-content: center; margin-top: 20px;">
+    <div style="width: 100%; max-width: 500px; padding-left: 30px; padding-right: 30px;">
+        <button  type="submit" mat-raised-button [color]="'accent'" style="width: 100%; color: white; box-shadow: 0 10px 20px 0px rgba(0,0,0,.2), 0 -5px 20px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);">SIGN UP</button>
+    </div>
+  </div>
+</form>
+
+<div style="display: flex; justify-content: center; margin-top: 30px; font: 500 12px/25px Roboto, 'Helvetica Neue', sans-serif;">
+  <div style="width: 100%; max-width: 500px; padding-left: 30px; padding-right: 30px;">
+      <div style="color: grey;">
+          <i class="material-icons" style="font-size: 10px;">star</i> Already have an account?
+          <a (click)="onSignIn()" style="text-decoration:none; cursor:pointer;">Sign In</a>
+      </div>
+  </div>
+</div>
