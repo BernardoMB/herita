@@ -17,7 +17,7 @@ export class UserEffectService {
     @Effect()
     onUserLoginAttempt$: Observable<Action> = this.action$
         .ofType(USER_LOGIN_ATTEMPT_ACTION)
-        .debug("Attempting login")
+        .debug("Effect: Attempting login")
         .do(action => {
             this.toastyService.info({
                 title: 'Loggin in',
@@ -26,31 +26,35 @@ export class UserEffectService {
                 timeout: 1500
             });
         })
-        .switchMap((action: any) => this.userService.login(action.payload))
-        .debug("Login attempt server response")
-        .map(res => {
-            if (res.status == 200) {
-                const response = JSON.parse(res._body);
-                const user: IUser = {
-                    _id: response._id,
-                    username: response.username,
-                    email: response.email,
-                    password: response.password,
-                    rol: response.rol
+        .switchMap((action: any) => this.userService.login(action.payload)
+            .debug("Effect: Login attempt server response")
+            .map(res => {
+                console.log('Effect: catched response', res);
+                if (res.status == 200) {
+                    const response = JSON.parse(res._body);
+                    const user: IUser = {
+                        _id: response._id,
+                        username: response.username,
+                        email: response.email,
+                        password: response.password,
+                        rol: response.rol
+                    }
+                    return new UserLoggedInAction(user);
+                } else {
+                    return new ErrorOcurredAction(res._body);
                 }
-                return new UserLoggedInAction(user);
-            } else {
-                return new ErrorOcurredAction(res._body);
-            }
-        })
-        .catch(err => {
-            return Observable.of(new ErrorOcurredAction(err))
-        });
-       
+            })
+            .catch(err => {
+                console.log('Effect: catched error', err);
+                return Observable.of(new ErrorOcurredAction(err._body))
+            })
+        );
+        
+
     @Effect({ dispatch: false })
     onUserLoggedIn$: Observable<Action> = this.action$
         .ofType(USER_LOGGED_IN_ACTION)
-        .debug("User logged in")
+        .debug("Effect: User logged in")
         .do((action: any) => {
             this.cookieService.putObject('usr', action.payload, { expires: moment().hours(11).minute(59).second(59).toDate() });
             setTimeout(() => {
@@ -85,14 +89,12 @@ export class UserEffectService {
         .ofType(ERROR_OCURRED_ACTION)
         .debug("Error ocurred")
         .do((action: any) => {
-            setTimeout(() => {
-                this.toastyService.error({
-                    title: 'Error',
-                    msg: `${action.payload}`,
-                    showClose: true,
-                    timeout: 5000
-                });
-            }, 0);
+            this.toastyService.error({
+                title: 'Error',
+                msg: `${action.payload}`,
+                showClose: true,
+                timeout: 5000
+            });
         });
 
     constructor(private action$: Actions,
@@ -100,8 +102,7 @@ export class UserEffectService {
         public toastyConfig: ToastyConfig,
         private cookieService: CookieService,
         private http: Http,
-        private userService: UserService) 
-    {
+        private userService: UserService) {
         this.toastyConfig.theme = 'material';
         this.toastyConfig.position = 'bottom-center';
     }

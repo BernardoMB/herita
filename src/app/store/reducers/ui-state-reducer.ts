@@ -41,6 +41,7 @@ function handleToggleIsLoadingAction(state: IUIState, action: ToggleIsLoadingAct
 }
 
 function handleUserLoginAttemptAction(state: IUIState, action: UserLoginAttemptAction) : IUIState {
+    console.log('handling UserLoginAttemptAction');
     const newUiState = Object.assign({}, state, { isLoading: true});
     newUiState.user = undefined;
     return newUiState;

@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { IApplicationState } from '../../../store/models/app-state';
 import { Store } from '@ngrx/store';
 import { UserLoginAttemptAction } from '../../../store/actions/uiState.actions';
+import { UserService } from '../../services/user.service';
 
 interface ILoginModel {
   username: string;
@@ -23,10 +24,15 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   public hide: boolean = true; // for showing the correct icon when displaying the password
   public showExternalContent: boolean = false;
-  
+
+  public loginErrorOcurred: boolean = false;
+  public loginTypeError: number;
+  public loginErrorMessage: string;
+
   constructor(private store: Store<IApplicationState>,
               private router: Router,
-              private elementRef: ElementRef) {}
+              private elementRef: ElementRef,
+              private userService: UserService) {}
 
   ngOnInit() {
     // If the property user of the uiState is not undefined, then navigate to home.
@@ -38,6 +44,12 @@ export class LoginComponent implements OnInit, AfterViewInit {
       }
       console.log('Login: No user in uiState');
       console.log('Login: User must enter credentials');
+    });
+    this.userService.passLoginError.subscribe(payload => {
+      console.log('Login: recieved login error', payload);
+      this.loginErrorMessage = payload[0];
+      this.loginTypeError = payload[1];
+      this.loginErrorOcurred = true;
     });
   }
   
@@ -59,6 +71,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
         username: form.username,
         password: form.password
       }
+      console.log('Dispatching UserLoginAttemptAction');
       this.store.dispatch(new UserLoginAttemptAction(credentials));
     }
   }

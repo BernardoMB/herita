@@ -9,6 +9,9 @@ import { environment } from '../../../environments/environment';
 export class UserService {
     private url: string;
 
+    // Subject nextea cosas
+    public passLoginError = new Subject<[string, number]>();
+
     constructor(private http: Http) { 
         this.url = environment.url;
     }
@@ -34,11 +37,16 @@ export class UserService {
     public login(credentials: { username: string, password: string}): Observable<any> {
         return this.http.post(`${this.url}/api/users/login`, credentials)
             .map(res => {
-                return res;
+                // response.status 200
+                console.log(`User service: response status ${res.status}`);
+                return res; // Already an observable.
             })
             .catch(res => {
-                //return Observable.throw(err)
-                return Observable.of(res);
+                // response.status not 200
+                console.log(`User service: response status ${res.status}`);
+                this.passLoginError.next([res._body, 1]);
+                return Observable.of(res); // Conduce al map del effect
+                //return Observable.throw(res); // Conduce al catch del effect
             });
     }
 
