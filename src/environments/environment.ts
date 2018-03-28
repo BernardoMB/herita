@@ -5,5 +5,7 @@
 
 export const environment = {
   production: false,
-  url: 'http://localhost:300'
+  //url: 'http://localhost:300'
+  // Specify IpV4 Address
+  url: 'http://192.168.0.103:300'
 };

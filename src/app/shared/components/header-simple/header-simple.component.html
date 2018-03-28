@@ -8,10 +8,13 @@
 <div *ngIf="showExternalContent">
     <mat-toolbar  color="accent">
         <mat-toolbar-row>
-            <span>First Row</span>
+            <span style="cursor: pointer;">First Row</span>
         </mat-toolbar-row>
         <mat-toolbar-row>
-            <span>About</span>
+            <span style="cursor: pointer;">About</span>
+        </mat-toolbar-row>
+        <mat-toolbar-row *ngIf="userLoggedIn">
+            <span style="cursor: pointer;" (click)="onLogOut($event)">Log Out</span>
         </mat-toolbar-row>
     </mat-toolbar>
 </div>

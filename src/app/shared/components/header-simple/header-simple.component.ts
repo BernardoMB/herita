@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { IApplicationState } from '../../../store/models/app-state';
+import { Store } from '@ngrx/store';
+import { UserLoggedOutAction } from '../../../store/actions/uiState.actions';
 
 @Component({
   selector: 'header-simple',
@@ -7,10 +10,12 @@ import { Router } from '@angular/router';
   styleUrls: ['./header-simple.component.scss']
 })
 export class HeaderSimpleComponent implements OnInit {
+  @Input('showLogout') public userLoggedIn: boolean;
 
   public showExternalContent: boolean;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router,
+      private store: Store<IApplicationState>) {}
 
   ngOnInit() {
   }
@@ -27,4 +32,8 @@ export class HeaderSimpleComponent implements OnInit {
     }
   }
 
+  public onLogOut(): void {
+    this.router.navigate(['/login']);
+    this.store.dispatch(new UserLoggedOutAction());
+  }
 }

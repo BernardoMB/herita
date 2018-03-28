@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Rx';
 import { ToastyService, ToastyConfig, ToastOptions, ToastData } from "ng2-toasty";
 import * as moment from 'moment';
 import { CookieService } from 'ngx-cookie';
-import { USER_LOGIN_ATTEMPT_ACTION, UserLoggedInAction, ErrorOcurredAction, USER_LOGGED_IN_ACTION, ERROR_OCURRED_ACTION } from '../actions/uiState.actions';
+import { USER_LOGIN_ATTEMPT_ACTION, UserLoggedInAction, ErrorOcurredAction, USER_LOGGED_IN_ACTION, ERROR_OCURRED_ACTION, USER_LOGGED_OUT_ACTION } from '../actions/uiState.actions';
 import { UserService } from '../../core/services/user.service';
 
 @Injectable()
@@ -67,22 +67,19 @@ export class UserEffectService {
             }, 0);
         });
 
-    /**
-     * Removes the User object cookie and displays a toast whenever the user logged out action is emmited
-     */
-    /* @Effect({ dispatch: false })
+    @Effect({ dispatch: false })
     userLoggedOut$: Observable<Action> = this.action$
         .ofType(USER_LOGGED_OUT_ACTION)
         .debug("User logged out")
         .do(action => {
             this.cookieService.remove('usr');
             this.toastyService.info({
-                title: this.wordList['LOGGING_OUT'] + "...",
-                msg: `${moment().locale(this.language).calendar()}`,
+                title: 'Logging out',
+                msg: `${moment().locale('US').calendar()}`,
                 showClose: true,
-                timeout: 1500
+                timeout: 3000
             });
-        }); */
+        });
 
     @Effect({ dispatch: false })
     onErrorOcurredAction$: Observable<Action> = this.action$

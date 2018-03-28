@@ -9,7 +9,10 @@ import { UIActions,
     USER_LOGGED_IN_ACTION,
     UserLoggedInAction,
     ERROR_OCURRED_ACTION,
-    ErrorOcurredAction} from '../actions/uiState.actions';
+    ErrorOcurredAction,
+    USER_LOGGED_OUT_ACTION,
+    UserLoggedOutAction} from '../actions/uiState.actions';
+import { IStoreData } from '../models/store-data';
 
 export function uiStateReducer(state: IUIState = INITIAL_UI_STATE, action: UIActions): IUIState {
     switch (action.type) {
@@ -21,6 +24,8 @@ export function uiStateReducer(state: IUIState = INITIAL_UI_STATE, action: UIAct
             return handleUserLoginAttemptAction(state, action);
         case USER_LOGGED_IN_ACTION:
             return handleUserLoggedInAction(state, action);
+        case USER_LOGGED_OUT_ACTION:
+            return handleUserLoggedOutAction(state, action);
         case ERROR_OCURRED_ACTION: 
             return handleErrorOcurredAction(state, action);
         default:
@@ -51,6 +56,10 @@ function handleUserLoggedInAction(state: IUIState, action: UserLoggedInAction): 
     const newUiState = Object.assign({}, state, { isLoading: false});
     newUiState.user = action.payload;
     return newUiState;
+}
+
+function handleUserLoggedOutAction(state: IUIState, action: UserLoggedOutAction): IUIState {
+    return INITIAL_UI_STATE;
 }
 
 function handleErrorOcurredAction(state: IUIState, action: ErrorOcurredAction): IUIState {
