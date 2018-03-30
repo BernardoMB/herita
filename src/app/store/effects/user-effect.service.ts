@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Rx';
 import { ToastyService, ToastyConfig, ToastOptions, ToastData } from "ng2-toasty";
 import * as moment from 'moment';
 import { CookieService } from 'ngx-cookie';
-import { USER_LOGIN_ATTEMPT_ACTION, UserLoggedInAction, ErrorOcurredAction, USER_LOGGED_IN_ACTION, ERROR_OCURRED_ACTION, USER_LOGGED_OUT_ACTION } from '../actions/uiState.actions';
+import { USER_LOGIN_ATTEMPT_ACTION, UserLoggedInAction, ErrorOcurredAction, USER_LOGGED_IN_ACTION, ERROR_OCURRED_ACTION, USER_LOGGED_OUT_ACTION, CREATE_USER_ACTION, CreatedUserAction } from '../actions/uiState.actions';
 import { UserService } from '../../core/services/user.service';
 
 @Injectable()
@@ -26,9 +26,8 @@ export class UserEffectService {
                 timeout: 1500
             });
         })
-        .switchMap((action: any) => this.userService.login(action.payload)
-            
-        ).debug("Effect: Login attempt server response")
+        .switchMap((action: any) => this.userService.login(action.payload))
+        .debug("Effect: Login attempt server response")
         .map(res => {
             console.log('Effect: mapped response', res);
             if (res.status == 200) {
@@ -82,6 +81,29 @@ export class UserEffectService {
                 timeout: 3000
             });
         });
+
+    @Effect()
+    onCreateUserAction$: Observable<Action> = this.action$
+        .ofType(CREATE_USER_ACTION)
+        .debug("Effect: Creating user")
+        .do(action => {
+            this.toastyService.info({
+                title: 'Creating user',
+                msg: `${moment().locale('US').calendar()}`,
+                showClose: true,
+                timeout: 1500
+            });
+        })
+        .switchMap((action: any) => this.userService.createUser(action.payload).debug("Effect: creating user server response")
+            .map((user: IUser) => {
+                console.log('Effect: mapped to user', user);
+                return new CreatedUserAction(user);
+            })
+            .catch((err: string) => {
+                console.log('Effct: catched to error', err);
+                return Observable.of(new ErrorOcurredAction(err))
+            })
+        );
 
     @Effect({ dispatch: false })
     onErrorOcurredAction$: Observable<Action> = this.action$

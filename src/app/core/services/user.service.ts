@@ -17,9 +17,22 @@ export class UserService {
     }
 
     public createUser(user: IUser): Observable<IUser> {
+        console.log('User service: about to post user', user);
         return this.http.post(`${this.url}/api/user`, user)
-            .map(res => res.json())
-            .catch(err => Observable.throw(err));
+            .map((response) => {
+                // response.status 200
+                console.log(`User service: response status ${response.status}`);
+                // TODO: manipulate response
+                const user = {
+
+                }
+                return null;
+            }).catch(responseBadStatus => {
+                console.log(`User service: response status ${responseBadStatus.status}`);
+                // TODO: manipulate response
+                const err = 'Pene';
+                return Observable.throw(err);
+            });
     }
 
     public updateUser(user: IUser): Observable<IUser> {

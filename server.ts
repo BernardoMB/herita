@@ -35,44 +35,48 @@ app.get('/*', (req, res) => {
 });
 
 //#region API Routes
-app.post('/api/users', (request, response) => {
-    var body = _.pick(request.body, ['username', 'email', 'password', 'rol']);
-    var user: any = new User(body);
-    // Save the incoming user from the request.
-    user.save().then(() => {
-        // return a promise whose resolve case gives us the token just created.
-        return user.generateAuthToken();
-    }).then(token => {
-        // Respond to the client sending back the token in the 'x-auth' header.
-        response.header('x-auth', token).send(user);
-    }).catch((error) => {
-        response.status(400).send(error);
-    });
-});
-
-// POST /api/users/login
-// Every time a user logs in a new token will be generated for that user.
-app.post('/api/users/login', (request, response) => {
-    var body = _.pick(request.body, ['username', 'email', 'password']);
-    // We will use a custom model method.
-    (<any>User).findByCredentials(body.username, body.email, body.password).then((user) => {
-        // Send Back the user.
-        return user.generateAuthToken().then((token) => {
-            response.header('x-auth', token).status(200).send(user);
+    app.post('/api/user', (request, response) => {
+        console.log('POST /api/user', request.body);
+        var body = _.pick(request.body, ['username', 'email', 'password', 'rol']);
+        var user: any = new User(body);
+        // Save the incoming user from the request.
+        user.save().then(() => {
+            console.log('Se pudo guardar el user');
+            // return a promise whose resolve case gives us the token just created.
+            return user.generateAuthToken();
+        }, (err) => {
+            response.send('Not a valid email address');
+        }).then(token => {
+            // Respond to the client sending back the token in the 'x-auth' header.
+            response.header('x-auth', token).send(user);
+        }).catch((error) => {
+            response.status(400).send(error);
         });
-    }).catch((error) => {
-        response.status(404).send(error);
     });
-});
 
-// DELETE /api/users/me/token
-app.delete('/users/me/token', authenticate, (request: any, res) => {
-    request.user.removeToken(request.token).then(() => {
-        res.status(200).send();
-    }, () => {
-        res.status(400).send();
+    // POST /api/users/login
+    // Every time a user logs in a new token will be generated for that user.
+    app.post('/api/users/login', (request, response) => {
+        var body = _.pick(request.body, ['username', 'email', 'password']);
+        // We will use a custom model method.
+        (<any>User).findByCredentials(body.username, body.email, body.password).then((user) => {
+            // Send Back the user.
+            return user.generateAuthToken().then((token) => {
+                response.header('x-auth', token).status(200).send(user);
+            });
+        }).catch((error) => {
+            response.status(404).send(error);
+        });
     });
-});
+
+    // DELETE /api/users/me/token
+    app.delete('/users/me/token', authenticate, (request: any, res) => {
+        request.user.removeToken(request.token).then(() => {
+            res.status(200).send();
+        }, () => {
+            res.status(400).send();
+        });
+    });
 //#endregion
 
 app.listen(port, () => {

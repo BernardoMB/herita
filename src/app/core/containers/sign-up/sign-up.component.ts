@@ -2,6 +2,10 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import {FormControl, Validators, FormGroup, ValidatorFn, AbstractControl} from '@angular/forms';
 import { ILocation } from '../../../../shared/models/ILocation';
+import { IUser } from '../../../../shared/models/IUser';
+import { Store } from '@ngrx/store';
+import { IApplicationState } from '../../../store/models/app-state';
+import { CreateUserAction } from '../../../store/actions/uiState.actions';
 
 // TODO: delete
 interface ISignUpModel {
@@ -34,7 +38,8 @@ export class SignUpComponent implements OnInit {
 
   constructor(
     private elementRef: ElementRef,
-    private router: Router
+    private router: Router,
+    private store: Store<IApplicationState>
   ) { }
 
   ngOnInit() {
@@ -104,9 +109,15 @@ export class SignUpComponent implements OnInit {
       //alert('Invalid form');
       return;
     };
-    const user: ISignUpModel = this.signUpForm.value;
-    console.log('Credentials', user);
-    // Dispatch action.
+    const credentials: ISignUpModel = this.signUpForm.value;
+    console.log('Credentials', credentials);
+    const user: IUser = {
+      username: credentials.username,
+      email: credentials.email,
+      password: credentials.password,
+      rol: 2
+    }
+    this.store.dispatch(new CreateUserAction(user));
   }
     
 

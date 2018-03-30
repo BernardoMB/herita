@@ -31,6 +31,18 @@ export class ToggleIsLoadingAction implements Action {
         readonly type = USER_LOGGED_OUT_ACTION;
         constructor(public payload?: any) { }
     }
+    
+    export const CREATE_USER_ACTION = 'CREATE_USER_ACTION';
+    export class CreateUserAction implements Action {
+        readonly type = CREATE_USER_ACTION;
+        constructor(public payload: IUser) { }
+    }
+
+    export const CREATED_USER_ACTION = 'CREATED_USER_ACTION';
+    export class CreatedUserAction implements Action {
+        readonly type = CREATED_USER_ACTION;
+        constructor(public payload: IUser) { }
+    }
 //#endregion
 
 
@@ -45,5 +57,7 @@ export type UIActions = UiStateTestAction
     | UserLoginAttemptAction
     | UserLoggedInAction
     | UserLoggedOutAction
+    | CreateUserAction
+    | CreatedUserAction
     | ErrorOcurredAction;
 
