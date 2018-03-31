@@ -6,6 +6,7 @@ import { IUser } from '../../../../shared/models/IUser';
 import { Store } from '@ngrx/store';
 import { IApplicationState } from '../../../store/models/app-state';
 import { CreateUserAction } from '../../../store/actions/uiState.actions';
+import { UserService } from '../../services/user.service';
 
 // TODO: delete
 interface ISignUpModel {
@@ -21,7 +22,7 @@ interface ISignUpModel {
   styleUrls: ['./sign-up.component.scss']
 })
 export class SignUpComponent implements OnInit {
-  public email = new FormControl('', [Validators.required, Validators.email]);
+  public email = new FormControl('', [Validators.required, this.emailValidator]);
   public username = new FormControl('', [Validators.required]);
   public password = new FormControl('', [Validators.required, Validators.minLength(6)]);
   public passwordConfirmation = new FormControl('', [Validators.required]);
@@ -36,15 +37,32 @@ export class SignUpComponent implements OnInit {
 
   public location: ILocation;
 
+  public signUpErrorOcurred: boolean = false;
+  public signUpTypeError: number;
+  public signUpErrorMessage: string;
+
   constructor(
     private elementRef: ElementRef,
     private router: Router,
-    private store: Store<IApplicationState>
+    private store: Store<IApplicationState>,
+    private userService: UserService
   ) { }
 
   ngOnInit() {
     this.signUpForm.reset();
     this.getLocationFromBrowser;
+    this.userService.passSignUpError.subscribe(payload => {
+      this.signUpTypeError = payload[1];
+      if (this.signUpTypeError == 0) {
+        // No error from server.
+        this.signUpErrorOcurred = false;
+        this.signUpErrorMessage = null;
+      } else {
+        console.log('SignUp: recieved sigup error', payload);
+        this.signUpErrorOcurred = true;
+        this.signUpErrorMessage = payload[0];
+      }
+    });
   }
 
   ngAfterViewInit() {
@@ -64,7 +82,7 @@ export class SignUpComponent implements OnInit {
   public getEmailErrorMessage() {
     if (this.signUpForm.get('email').hasError('required')) {
       return 'You must enter a value';
-    } else if (this.signUpForm.get('email').hasError('email')) {
+    } else if (this.signUpForm.get('email').hasError('invalidEmail')) {
       return 'Not a valid email';
     } else {
       return '';
@@ -88,6 +106,16 @@ export class SignUpComponent implements OnInit {
       return 'Passwords do not match';
     } else {
       return '';
+    }
+  }
+
+  public emailValidator(c: FormControl): {[key: string]: any} {
+    const regexp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+    const isValid: boolean = regexp.test(c.value);
+    if (isValid) {
+      return null;
+    } else {
+      return {'invalidEmail': {value: c.value}};
     }
   }
 
@@ -120,7 +148,6 @@ export class SignUpComponent implements OnInit {
     this.store.dispatch(new CreateUserAction(user));
   }
     
-
   public onSignIn(): void {
     this.router.navigate(['/login']);
   }

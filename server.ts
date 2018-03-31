@@ -39,18 +39,31 @@ app.get('/*', (req, res) => {
         console.log('POST /api/user', request.body);
         var body = _.pick(request.body, ['username', 'email', 'password', 'rol']);
         var user: any = new User(body);
-        // Save the incoming user from the request.
         user.save().then(() => {
-            console.log('Se pudo guardar el user');
-            // return a promise whose resolve case gives us the token just created.
-            return user.generateAuthToken();
+            return user.generateAuthToken().then(token => {
+                // Respond to the client sending back the token in the 'x-auth' header.
+                response.header('x-auth', token).status(200).send(user);
+            }, err => {
+                response.status(400).send('Could not generate token');
+            });
         }, (err) => {
-            response.send('Not a valid email address');
-        }).then(token => {
-            // Respond to the client sending back the token in the 'x-auth' header.
-            response.header('x-auth', token).send(user);
-        }).catch((error) => {
-            response.status(400).send(error);
+            console.log('Error saving user');
+            if (err.code == 11000) {
+                console.log('Duplicate value');
+                let invalidField = err.message.split('index: ')[1].split('_1')[0];
+                console.log('Invalid field:', invalidField);
+                switch(invalidField) { 
+                    case 'username': { 
+                        response.status(409).send('Username already taken');
+                        break; 
+                    } 
+                    case 'email': { 
+                        response.status(409).send('An account with that email address already exists');
+                        break; 
+                    } 
+                    default: { } 
+                 } 
+            }
         });
     });
 

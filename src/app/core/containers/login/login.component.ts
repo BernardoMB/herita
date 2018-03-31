@@ -46,9 +46,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
     });
     this.userService.passLoginError.subscribe(payload => {
       console.log('Login: recieved login error', payload);
-      this.loginErrorMessage = payload[0];
-      this.loginTypeError = payload[1];
       this.loginErrorOcurred = true;
+      this.loginTypeError = payload[1];
+      this.loginErrorMessage = payload[0];
     });
   }
   

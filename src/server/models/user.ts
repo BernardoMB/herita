@@ -50,7 +50,6 @@ const UserSchema = new mongoose.Schema({
 
 // Define the INSTANCE METHODS.
 
-// Tell what mongoose should send back when the user model is converted to a json object.
 UserSchema.methods.generateAuthToken = function () {
     var user = this;
     var access = 'auth';

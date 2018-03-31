@@ -11,6 +11,7 @@ export class UserService {
 
     // Subject nextea cosas
     public passLoginError = new Subject<[string, number]>();
+    public passSignUpError = new Subject<[string, number]>();
 
     constructor(private http: Http) { 
         this.url = environment.url;
@@ -19,19 +20,19 @@ export class UserService {
     public createUser(user: IUser): Observable<IUser> {
         console.log('User service: about to post user', user);
         return this.http.post(`${this.url}/api/user`, user)
-            .map((response) => {
+            .map((response: any) => {
                 // response.status 200
-                console.log(`User service: response status ${response.status}`);
-                // TODO: manipulate response
-                const user = {
-
-                }
-                return null;
+                console.log('User service: response status:', response.status);
+                this.passSignUpError.next(['', 0]); // Se nextea 0 porque no hay error.
+                const user: IUser = JSON.parse(response._body);
+                return user;
             }).catch(responseBadStatus => {
-                console.log(`User service: response status ${responseBadStatus.status}`);
-                // TODO: manipulate response
-                const err = 'Pene';
-                return Observable.throw(err);
+                // response.status other than 200
+                console.log('User service: bad response status:', responseBadStatus.status);
+                const errmsg = responseBadStatus._body;
+                console.log('User service: Error message:', errmsg);
+                this.passSignUpError.next([errmsg, 1]);
+                return Observable.throw(errmsg);
             });
     }
 
