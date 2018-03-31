@@ -10,6 +10,7 @@
             <!-- USERNAME -->
             <mat-form-field [hideRequiredMarker]="true" [floatLabel]="'auto'" [color]="'accent'" style="width: 100%;">
                 <input matInput placeholder="Enter your username" formControlName="username" autofocus required>
+                <mat-error *ngIf="username.invalid">{{getUsernameErrorMessage()}}</mat-error>
             </mat-form-field>
             <!-- EMAIL -->
             <mat-form-field [hideRequiredMarker]="true" [floatLabel]="'auto'" [color]="'accent'" style="width: 100%;">

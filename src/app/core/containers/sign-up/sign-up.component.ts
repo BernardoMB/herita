@@ -22,8 +22,8 @@ interface ISignUpModel {
   styleUrls: ['./sign-up.component.scss']
 })
 export class SignUpComponent implements OnInit {
+  public username = new FormControl('', [Validators.required, this.usernameValidator]);
   public email = new FormControl('', [Validators.required, this.emailValidator]);
-  public username = new FormControl('', [Validators.required]);
   public password = new FormControl('', [Validators.required, Validators.minLength(6)]);
   public passwordConfirmation = new FormControl('', [Validators.required]);
   public signUpForm = new FormGroup ({
@@ -89,6 +89,16 @@ export class SignUpComponent implements OnInit {
     }
   }
 
+  public getUsernameErrorMessage() {
+    if (this.signUpForm.get('username').hasError('required')) {
+      return 'You must enter a value';
+    } else if (this.signUpForm.get('username').hasError('invalidUsername')) {
+      return 'No spaces allowed';
+    } else {
+      return '';
+    }
+  }
+
   public getPasswordErrorMessage() {
     if (this.signUpForm.get('password').hasError('required')) {
       return 'You must enter a value';
@@ -106,6 +116,16 @@ export class SignUpComponent implements OnInit {
       return 'Passwords do not match';
     } else {
       return '';
+    }
+  }
+
+  public usernameValidator(c: FormControl): {[key: string]: any} {
+    const regexp = new RegExp(/^\S*$/);
+    const isValid: boolean = regexp.test(c.value);
+    if (isValid) {
+      return null;
+    } else {
+      return {'invalidUsername': {value: c.value}};
     }
   }
 
