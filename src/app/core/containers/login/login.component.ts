@@ -6,6 +6,7 @@ import { IApplicationState } from '../../../store/models/app-state';
 import { Store } from '@ngrx/store';
 import { UserLoginAttemptAction } from '../../../store/actions/uiState.actions';
 import { UserService } from '../../services/user.service';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 interface ILoginModel {
   username: string;
@@ -18,11 +19,16 @@ interface ILoginModel {
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, AfterViewInit {
-
+  public username = new FormControl('', [Validators.required]);
+  public password = new FormControl('', [Validators.required]);
+  public loginForm = new FormGroup({
+    username: this.username,
+    password: this.password
+  });
+  
   public userSubscription: Subscription;
-  public formModel = {} as ILoginModel;
 
-  public hide: boolean = true; // for showing the correct icon when displaying the password
+  public hide: boolean = true;
   
   public loginErrorOcurred: boolean = false;
   public loginTypeError: number;
@@ -55,16 +61,19 @@ export class LoginComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#fafafa';
   }
+  
+  get isValid() {
+    return this.loginForm.valid && !this.loginForm.pristine;
+  }
 
-  public onLogIn(form: ILoginModel, isValid: boolean): void {
-    if (isValid) {
-      const credentials = {
-        username: form.username,
-        password: form.password
-      }
-      console.log('Dispatching UserLoginAttemptAction');
-      this.store.dispatch(new UserLoginAttemptAction(credentials));
-    }
+  public onSubmit() {
+    if (!this.isValid) {
+      //alert('Invalid form');
+      return;
+    };
+    const credentials: ILoginModel = this.loginForm.value;
+    console.log('Dispatching UserLoginAttemptAction with credentials', credentials);
+    this.store.dispatch(new UserLoginAttemptAction(credentials));
   }
 
   public onForgot(): void {

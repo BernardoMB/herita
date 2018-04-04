@@ -4,28 +4,26 @@
     <div style="margin-top: 30px; ">Welcome!</div>
 </div>
 
-<form #f="ngForm" (ngSubmit)="onLogIn(f.value, f.valid)">
+<form [formGroup]="loginForm">
     <div style="display: flex; justify-content: center;">
         <div style="position: relative; width: 100%; max-width: 500px; display: flex; flex-direction: column; padding-left: 30px; padding-right: 30px;">
             <mat-form-field [hideRequiredMarker]="true" [floatLabel]="'auto'" [color]="'accent'" style="width: 100%;">
-                <input name="username" #username="ngModel" [(ngModel)]="formModel.username" matInput placeholder="Username or email" required>
+                <input matInput placeholder="Username or email" formControlName="username" autofocus required>
             </mat-form-field>
-            
-            <mat-form-field [hideRequiredMarker]="true" [color]="'accent'" style="width: 100%;">
-                <input name="password" #password="ngModel" [(ngModel)]="formModel.password" matInput placeholder="Enter your password" [type]="hide ? 'password' : 'text'" required>
+            <mat-form-field [hideRequiredMarker]="true" [floatLabel]="'auto'" [color]="'accent'" style="width: 100%;">
+                <input matInput placeholder="Password" formControlName="password" [type]="hide ? 'password' : 'text'" required>
                 <mat-icon style="color: grey; cursor:pointer;" matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
             </mat-form-field>
-
             <div style="position:absolute; bottom: -8px; height:20px;">
-                <span *ngIf="loginErrorOcurred" style="color: red; font: 500 11px/20px Roboto, 'Helvetica Neue', sans-serif;"><i class="fas fa-exclamation-circle"></i> {{loginErrorMessage}}</span>
+                <span *ngIf="loginErrorOcurred" style="color: red; font: 500 11px/20px Roboto, 'Helvetica Neue', sans-serif;">
+                    <i class="fas fa-exclamation-circle"></i> {{loginErrorMessage}}
+                </span>
             </div>
-
         </div>
     </div>
-    
     <div style="display: flex; justify-content: center; margin-top: 20px;">
         <div style="width: 100%; max-width: 500px; padding-left: 30px; padding-right: 30px;">
-            <button  type="submit" mat-raised-button [color]="'accent'" style="width: 100%; color: white; box-shadow: 0 10px 20px 0px rgba(0,0,0,.2), 0 -5px 20px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);">LOG IN</button>
+            <button mat-raised-button [color]="'accent'" (click)="onSubmit()" style="width: 100%; color: white; box-shadow: 0 10px 20px 0px rgba(0,0,0,.2), 0 -5px 20px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);">LOG IN</button>
         </div>
     </div>
 </form>
