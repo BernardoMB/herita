@@ -1,5 +1,4 @@
 import { Component, OnInit, ElementRef, AfterViewInit } from '@angular/core';
-import * as $ from 'jquery';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { IApplicationState } from '../../../store/models/app-state';
@@ -51,10 +50,16 @@ export class LoginComponent implements OnInit, AfterViewInit {
       console.log('Login: User must enter credentials');
     });
     this.userService.passLoginError.subscribe(payload => {
-      console.log('Login: recieved login error', payload);
-      this.loginErrorOcurred = true;
       this.loginTypeError = payload[1];
-      this.loginErrorMessage = payload[0];
+      if (this.loginTypeError == 0) {
+        // No error from server.
+        this.loginErrorOcurred = false;
+        this.loginErrorMessage = null;
+      } else {
+        console.log('Login: recieved login error', payload);
+        this.loginErrorOcurred = true;
+        this.loginErrorMessage = payload[0];
+      }
     });
   }
   
@@ -62,13 +67,12 @@ export class LoginComponent implements OnInit, AfterViewInit {
     this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#fafafa';
   }
   
-  get isValid() {
+  get isValid(): boolean {
     return this.loginForm.valid && !this.loginForm.pristine;
   }
 
-  public onSubmit() {
+  public onSubmit(): void {
     if (!this.isValid) {
-      //alert('Invalid form');
       return;
     };
     const credentials: ILoginModel = this.loginForm.value;

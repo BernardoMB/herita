@@ -19,22 +19,25 @@
             </mat-form-field>
             <!-- PASSWORD -->
             <mat-form-field [hideRequiredMarker]="true" [floatLabel]="'auto'" [color]="'accent'" style="width: 100%;">
-                <input matInput placeholder="Enter your password" formControlName="password"  [type]="hide ? 'password' : 'text'" required>
+                <input matInput placeholder="Enter your password" formControlName="password" [type]="hide ? 'password' : 'text'" required>
                 <mat-icon style="color: grey; cursor:pointer;" matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
                 <mat-error *ngIf="password.invalid">{{getPasswordErrorMessage()}}</mat-error>
             </mat-form-field>
             <!-- PASSWORD CONFIRMATION-->
             <mat-form-field [hideRequiredMarker]="true" [floatLabel]="'auto'" [color]="'accent'" style="width: 100%;">
-                <input matInput placeholder="Confirm your password" formControlName="passwordConfirmation"  [type]="hide ? 'password' : 'text'" required>
+                <input matInput placeholder="Confirm your password" formControlName="passwordConfirmation" [type]="hide ? 'password' : 'text'"
+                    required>
                 <mat-icon style="color: grey; cursor:pointer;" matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
                 <mat-error *ngIf="passwordConfirmation.invalid">{{getPasswordConfirmationErrorMessage()}}</mat-error>
             </mat-form-field>
-            <!-- TODO: Registration error -->
-            <!-- <div style="position:absolute; bottom: -8px; height:20px;">
-            <span *ngIf="loginErrorOcurred" style="color: red; font: 500 11px/20px Roboto, 'Helvetica Neue', sans-serif;"><i class="fas fa-exclamation-circle"></i> {{loginErrorMessage}}</span>
-            </div> -->
+            <!-- Registration error -->
             <div style="position:absolute; bottom: -8px; height:20px;">
-                <span *ngIf="signUpErrorOcurred" style="color: red; font: 500 11px/20px Roboto, 'Helvetica Neue', sans-serif;"><i class="fas fa-exclamation-circle"></i> {{signUpErrorMessage}}</span>
+                <span *ngIf="signUpErrorOcurred" style="color: red; font: 500 11px/20px Roboto, 'Helvetica Neue', sans-serif;">
+                    <i class="fas fa-exclamation-circle"></i> {{signUpErrorMessage}}</span>
+            </div>
+            <div style="position:absolute; bottom: -8px; height:20px;">
+                <span *ngIf="signUpErrorOcurred" style="color: red; font: 500 11px/20px Roboto, 'Helvetica Neue', sans-serif;">
+                    <i class="fas fa-exclamation-circle"></i> {{signUpErrorMessage}}</span>
             </div>
         </div>
     </div>

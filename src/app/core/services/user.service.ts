@@ -17,6 +17,24 @@ export class UserService {
         this.url = environment.url;
     }
 
+    public login(credentials: { username: string, password: string}): Observable<any> {
+        return this.http.post(`${this.url}/api/users/login`, credentials)
+            .map((response: any) => {
+                // response.status 200
+                console.log('User service: response status', response.status);
+                this.passLoginError.next(['', 0]); // Se nextea 0 porque no hay error.
+                const user: IUser = JSON.parse(response._body);
+                return user;
+            })
+            .catch(responseBadStatus => {
+                // response.status other than 200
+                console.log('User service: response status', responseBadStatus.status);
+                const errmsg = responseBadStatus._body;
+                this.passLoginError.next([errmsg, 1]);
+                return Observable.throw(errmsg);
+            });
+    }
+
     public createUser(user: IUser): Observable<IUser> {
         console.log('User service: about to post user', user);
         return this.http.post(`${this.url}/api/user`, user)
@@ -46,22 +64,6 @@ export class UserService {
         return this.http.delete(`${this.url}/api/user/${user._id}`)
             .map(res => res.json())
             .catch(err => Observable.throw(err));
-    }
-
-    public login(credentials: { username: string, password: string}): Observable<any> {
-        return this.http.post(`${this.url}/api/users/login`, credentials)
-            .map(res => {
-                // response.status 200
-                console.log(`User service: response status ${res.status}`);
-                return res; // Already an observable.
-            })
-            .catch(res => {
-                // response.status not 200
-                console.log(`User service: response status ${res.status}`);
-                this.passLoginError.next([res._body, 1]);
-                return Observable.of(res); // Conduce al map del effect
-                //return Observable.throw(res); // Conduce al catch del effect
-            });
     }
 
 }

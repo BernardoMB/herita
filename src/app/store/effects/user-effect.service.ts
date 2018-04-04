@@ -26,30 +26,38 @@ export class UserEffectService {
                 timeout: 1500
             });
         })
-        .switchMap((action: any) => this.userService.login(action.payload))
-        .debug("Effect: Login attempt server response")
-        .map(res => {
-            console.log('Effect: mapped response', res);
-            if (res.status == 200) {
-                const response = JSON.parse(res._body);
-                const user: IUser = {
-                    _id: response._id,
-                    username: response.username,
-                    email: response.email,
-                    password: response.password,
-                    rol: response.rol
-                }
+        .switchMap((action: any) => this.userService.login(action.payload)
+            .map((user: IUser) => {
+                console.log('Effect: mapped to user:', user);
                 return new UserLoggedInAction(user);
-            } else {
-                return new ErrorOcurredAction(res._body);
-            }
-        })
-        .catch(err => {
-            console.log('Effect: catched error', err);
-            return Observable.of(new ErrorOcurredAction(err._body))
-        });
+            }).catch((err: string) => {
+                console.log('Effect: catched error', err);
+                return Observable.of(new ErrorOcurredAction(err))
+            }))
+        .debug("Effect: Login attempt server response");
         
-
+    @Effect()
+    onCreateUserAction$: Observable<Action> = this.action$
+        .ofType(CREATE_USER_ACTION)
+        .debug("Effect: Creating user")
+        .do(action => {
+            this.toastyService.info({
+                title: 'Creating user',
+                msg: `${moment().locale('US').calendar()}`,
+                showClose: true,
+                timeout: 1500
+            });
+        })
+        .switchMap((action: any) => this.userService.createUser(action.payload)
+            .map((user: IUser) => {
+                console.log('Effect: mapped to user:', user);
+                return new CreatedUserAction(user);
+            }).catch((err: string) => {
+                console.log('Effcte: catched error:', err);
+                return Observable.of(new ErrorOcurredAction(err))
+            })
+        ).debug("Effect: creating user server response");
+        
     @Effect({ dispatch: false })
     onUserLoggedIn$: Observable<Action> = this.action$
         .ofType(USER_LOGGED_IN_ACTION)
@@ -81,29 +89,6 @@ export class UserEffectService {
                 timeout: 3000
             });
         });
-
-    @Effect()
-    onCreateUserAction$: Observable<Action> = this.action$
-        .ofType(CREATE_USER_ACTION)
-        .debug("Effect: Creating user")
-        .do(action => {
-            this.toastyService.info({
-                title: 'Creating user',
-                msg: `${moment().locale('US').calendar()}`,
-                showClose: true,
-                timeout: 1500
-            });
-        })
-        .switchMap((action: any) => this.userService.createUser(action.payload)
-            .map((user: IUser) => {
-                console.log('Effect: mapped to user:', user);
-                return new CreatedUserAction(user);
-            })
-            .catch((err: string) => {
-                console.log('Effcte: catched error:', err);
-                return Observable.of(new ErrorOcurredAction(err))
-            })
-        ).debug("Effect: creating user server response");
 
     @Effect({ dispatch: false })
     onCreatedUserAction$: Observable<Action> = this.action$
