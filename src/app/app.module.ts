@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 // NgRx
@@ -21,7 +22,7 @@ import { CookieModule } from 'ngx-cookie';
     AppRoutingModule,
     // Angular material animations support
     BrowserAnimationsModule,
-    NoopAnimationsModule,
+    //NoopAnimationsModule, // Uncoment this line if device is too slow to render animations properly
     // My modules
     CoreModule.forRoot(),
     // NgRx

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderSimpleComponent } from './components/header-simple/header-simple.component';
-import { MaterialComponentsModule } from '../material-module.module';
+import { MaterialComponentsModule } from '../material-components.module';
 
 @NgModule({
   imports: [

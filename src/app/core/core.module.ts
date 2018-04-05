@@ -7,7 +7,7 @@ import { MainComponent } from './containers/main/main.component';
 import { LoginComponent } from './containers/login/login.component';
 import { NotFoundComponent } from './containers/not-found/not-found.component';
 // Material components
-import { MaterialComponentsModule } from '../material-module.module';
+import { MaterialComponentsModule } from '../material-components.module';
 // Services
 import { AuthGuard } from './services/auth.guard';
 import { SignUpComponent } from './containers/sign-up/sign-up.component';

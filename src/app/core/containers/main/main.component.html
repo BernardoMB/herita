@@ -1,7 +1,6 @@
-<header-simple [showLogout]="userLoggedIn"></header-simple>
+<!-- <header-simple [showLogout]="userLoggedIn"></header-simple>
 
-<!-- <div class="alternative"> -->
-
+<div class="alternative">
   <mat-toolbar color="accent" style="height: 100px; display: flex; flex-direction:column; justify-content:center;">
     <mat-toolbar-row>
       <span>Dog Breeds App</span>
@@ -10,7 +9,7 @@
       <mat-icon class="example-icon">delete</mat-icon>
     </mat-toolbar-row>
   </mat-toolbar>
-  
+
   <div style="height: 20px;"></div>
 
   <mat-card class="example-card">
@@ -40,11 +39,13 @@
       <mat-card-title>Lhasa Apso</mat-card-title>
       <mat-card-subtitle>Dog Breed</mat-card-subtitle>
     </mat-card-header>
-    <img mat-card-image src="https://scontent.fmex7-1.fna.fbcdn.net/v/t1.0-9/13239488_919808771451322_7502245245848236235_n.jpg?_nc_cat=0&oh=2d03a9ef2dbd50cac22b7110c204478a&oe=5B42244E" alt="Photo of a Shiba Inu">
+    <img mat-card-image src="https://scontent.fmex7-1.fna.fbcdn.net/v/t1.0-9/13239488_919808771451322_7502245245848236235_n.jpg?_nc_cat=0&oh=2d03a9ef2dbd50cac22b7110c204478a&oe=5B42244E"
+      alt="Photo of a Shiba Inu">
     <mat-card-content>
       <p>
-        The Lhasa Apso is a non-sporting dog breed originating in
-        Tibet. It was bred as an interior sentinel in the Buddhist monasteries, to alert the monks to any intruders who entered. Lhasa is the capital city of Tibet, and apso is a word in the Tibetan language meaning "bearded", so, Lhasa Apso simply means "long-haired Lhasa dog".
+        The Lhasa Apso is a non-sporting dog breed originating in Tibet. It was bred as an interior sentinel in the Buddhist monasteries,
+        to alert the monks to any intruders who entered. Lhasa is the capital city of Tibet, and apso is a word in the Tibetan
+        language meaning "bearded", so, Lhasa Apso simply means "long-haired Lhasa dog".
       </p>
     </mat-card-content>
     <mat-card-actions>
@@ -52,9 +53,96 @@
       <button mat-raised-button color="accent">SHARE</button>
     </mat-card-actions>
   </mat-card>
-
-<!-- </div> -->
+</div> -->
 
 <!-- <p>
   main works!
 </p> -->
+
+<mat-toolbar color="primary" style="display: flex; justify-content: center;">
+  <div (click)="onGoToHomePage()" style="height: 32px; width: 32px; background: url(../../../../assets/images/header-icon-white.svg); background-size: 100% 100%;"></div>
+  <div style="position: absolute; left: 15px;" (click)="toggleSidenav()">
+    <i class="fa fa-bars" style="color: white;" aria-hidden="true"></i>
+  </div>
+</mat-toolbar>
+
+<mat-sidenav-container style="" (backdropClick)="close('backdrop')">
+
+  <mat-sidenav style="display:flex; flex-direction:column; width:60%;" #sidenav (keydown.escape)="close('escape')" disableClose>
+    <div>
+      {{ username }}
+    </div>
+    <div style="display:flex; justify-content:center">
+      <button mat-raised-button [color]="'accent'" (click)="onLogOut()" style="width: 80%; margin-top: 10px; margin-bottom: 10px; color: white; box-shadow: 0 10px 20px 0px rgba(0,0,0,.2), 0 -5px 20px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);">LOG OUT</button>
+    </div>
+  </mat-sidenav>
+
+
+  <mat-sidenav-content style="">
+    <!-- <p>Closed due to: {{reason}}</p> -->
+
+    <div style="height: 20px;"></div>
+
+    <div *ngIf="chart">
+      <canvas id="canvas">{{ chart }}</canvas>
+    </div>
+
+    <div style="height: 20px;"></div>
+
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>Shiba Inu</mat-card-title>
+        <mat-card-subtitle>Dog Breed</mat-card-subtitle>
+      </mat-card-header>
+      <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+      <mat-card-content>
+        <p>
+          The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog that copes
+          very well with mountainous terrain, the Shiba Inu was originally bred for hunting.
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="accent">LIKE</button>
+        <button mat-raised-button color="accent">SHARE</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <div style="height: 20px;"></div>
+    
+    <div *ngIf="chart2">
+      <canvas id="canvas2">{{ chart }}</canvas>
+    </div>
+    
+    <div style="height: 20px;"></div>
+    
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image2"></div>
+        <mat-card-title>Lhasa Apso</mat-card-title>
+        <mat-card-subtitle>Dog Breed</mat-card-subtitle>
+      </mat-card-header>
+      <img mat-card-image src="https://scontent.fmex7-1.fna.fbcdn.net/v/t1.0-9/13239488_919808771451322_7502245245848236235_n.jpg?_nc_cat=0&oh=2d03a9ef2dbd50cac22b7110c204478a&oe=5B42244E"
+        alt="Photo of a Shiba Inu">
+      <mat-card-content>
+        <p>
+          The Lhasa Apso is a non-sporting dog breed originating in Tibet. It was bred as an interior sentinel in the Buddhist monasteries,
+          to alert the monks to any intruders who entered. Lhasa is the capital city of Tibet, and apso is a word in the
+          Tibetan language meaning "bearded", so, Lhasa Apso simply means "long-haired Lhasa dog".
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="accent">LIKE</button>
+        <button mat-raised-button color="accent">SHARE</button>
+      </mat-card-actions>
+    </mat-card>
+
+  </mat-sidenav-content>
+
+  <!-- <mat-sidenav align="end" style="display:flex; flex-direction:column; width:60%;" #sidenav (keydown.escape)="close('escape')" disableClose>
+    <div style="display:flex; justify-content:center">
+      <button mat-raised-button [color]="'accent'" (click)="onLogOut()" style="width: 80%; margin-top: 10px; margin-bottom: 10px; color: white; box-shadow: 0 10px 20px 0px rgba(0,0,0,.2), 0 -5px 20px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);">LOG OUT</button>
+    </div>
+  </mat-sidenav> -->
+
+</mat-sidenav-container>
