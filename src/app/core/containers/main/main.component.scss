@@ -1,3 +1,5 @@
+@import '../../../../scss/custom-variables';
+
 .example-header-image {
     background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
     background-size: cover;
@@ -14,4 +16,13 @@
 
 .example-spacer {
     flex: 1 1 auto;
+}
+
+.add-expense {
+    position: fixed;
+    right: 20px;
+    border-radius: 30px;
+    z-index: 2;
+    top: 70px;
+    background-color: $app-primary;
 }

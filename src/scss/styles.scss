@@ -11,6 +11,11 @@ html, body {
     flex-direction: column;
 }
 
+
+.mat-drawer-backdrop.mat-drawer-shown {
+    background-color: rgba(255, 255, 255, 0) !important;
+}
+
 // SLim loading bar
 @import "slim-loading-bar";
 

@@ -59,6 +59,7 @@
   main works!
 </p> -->
 
+
 <mat-toolbar color="primary" style="display: flex; justify-content: center;">
   <div (click)="onGoToHomePage()" style="height: 32px; width: 32px; background: url(../../../../assets/images/header-icon-white.svg); background-size: 100% 100%;"></div>
   <div style="position: absolute; left: 15px;" (click)="toggleSidenav()">
@@ -66,9 +67,21 @@
   </div>
 </mat-toolbar>
 
-<mat-sidenav-container style="" (backdropClick)="close('backdrop')">
+<div class="add-expense" (click)="toggleRightSidenav()">
+  <!-- <div style=" width: 40px; height: 40px; display: flex; justify-content:center; text-align: center;">
+    <div style="height: 100%; display: flex; flex-direction: column; justify-content:center;">
+      <i style="color: white;" class="fa fa-plus" aria-hidden="true"></i>
+    </div>
+  </div> -->
+  <button mat-mini-fab>
+    <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+  </button>
 
-  <mat-sidenav style="display:flex; flex-direction:column; width:60%;" #sidenav (keydown.escape)="close('escape')" disableClose>
+</div>
+
+<mat-sidenav-container (backdropClick)="closeAllSidenavs()">
+
+  <mat-sidenav style="display:flex; flex-direction:column; width:60%;" #sidenav (keydown.escape)="closeSidenav('escape')" disableClose>
     <div>
       {{ username }}
     </div>
@@ -76,7 +89,6 @@
       <button mat-raised-button [color]="'accent'" (click)="onLogOut()" style="width: 80%; margin-top: 10px; margin-bottom: 10px; color: white; box-shadow: 0 10px 20px 0px rgba(0,0,0,.2), 0 -5px 20px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);">LOG OUT</button>
     </div>
   </mat-sidenav>
-
 
   <mat-sidenav-content style="">
     <!-- <p>Closed due to: {{reason}}</p> -->
@@ -109,13 +121,13 @@
     </mat-card>
 
     <div style="height: 20px;"></div>
-    
+
     <div *ngIf="chart2">
       <canvas id="canvas2">{{ chart }}</canvas>
     </div>
-    
+
     <div style="height: 20px;"></div>
-    
+
     <mat-card class="example-card">
       <mat-card-header>
         <div mat-card-avatar class="example-header-image2"></div>
@@ -139,10 +151,23 @@
 
   </mat-sidenav-content>
 
-  <!-- <mat-sidenav align="end" style="display:flex; flex-direction:column; width:60%;" #sidenav (keydown.escape)="close('escape')" disableClose>
-    <div style="display:flex; justify-content:center">
-      <button mat-raised-button [color]="'accent'" (click)="onLogOut()" style="width: 80%; margin-top: 10px; margin-bottom: 10px; color: white; box-shadow: 0 10px 20px 0px rgba(0,0,0,.2), 0 -5px 20px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);">LOG OUT</button>
+  <mat-sidenav align="end" style="background-color: rgba(255, 255, 255, 0); display:flex; flex-direction:column; width:20%; box-shadow: none;"
+    #rightSidenav (keydown.escape)="closeRightSidenav()" disableClose>
+    <div style="display:flex; justify-content:center; margin-top: 70px;">
+      <button mat-mini-fab style="background-color:rgb(85, 194, 85);">
+        <mat-icon aria-label="Example icon-button with a heart icon">attach_money</mat-icon>
+      </button>
     </div>
-  </mat-sidenav> -->
+    <div style="display:flex; justify-content:center; margin-top: 20px;">
+      <button mat-mini-fab style="background-color:rgb(226, 43, 83);">
+        <mat-icon aria-label="Example icon-button with a heart icon">money_off</mat-icon>
+      </button>
+    </div>
+    <div style="display:flex; justify-content:center; margin-top: 20px;">
+      <button mat-mini-fab style="background-color:pink;">
+        <mat-icon aria-label="Example icon-button with a heart icon">favorite</mat-icon>
+      </button>
+    </div>
+  </mat-sidenav>
 
 </mat-sidenav-container>

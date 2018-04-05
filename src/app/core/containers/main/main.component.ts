@@ -16,12 +16,14 @@ import { IUser } from '../../../../shared/models/IUser';
 })
 export class MainComponent implements OnInit {
   @ViewChild('sidenav') sidenav: MatSidenav;
+  @ViewChild('rightSidenav') rightSidenav: MatSidenav;
 
   public chart = []; // This will hold our chart info
   public chart2 = []; // This will hold our chart info
 
   public userLoggedIn: boolean = false;
   public showSidenav: boolean = false;
+  public showRightSidenav: boolean = false;
 
   public user: Observable<IUser>;
   public username: string;
@@ -124,9 +126,18 @@ export class MainComponent implements OnInit {
 
   public reason = '';
 
-  close(reason: string) {
+  closeSidenav(reason: string): void {
     this.reason = reason;
     this.sidenav.close();
+  }
+  
+  closeRightSidenav(): void {
+    this.rightSidenav.close();
+  }
+  
+  closeAllSidenavs(): void {
+    this.sidenav.close();
+    this.rightSidenav.close();
   }
 
   public toggleSidenav(): void {
@@ -134,7 +145,16 @@ export class MainComponent implements OnInit {
     if (this.showSidenav) {
       this.sidenav.open();
     } else {
-      this.close('Hamburger');
+      this.closeSidenav('Hamburger');
+    }
+  }
+
+  public toggleRightSidenav(): void {
+    this.showRightSidenav = !this.showRightSidenav;
+    if (this.showRightSidenav) {
+      this.rightSidenav.open();
+    } else {
+      this.closeRightSidenav();
     }
   }
 
