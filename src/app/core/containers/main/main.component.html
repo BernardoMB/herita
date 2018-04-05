@@ -67,19 +67,31 @@
   </div>
 </mat-toolbar>
 
-<div class="add-expense" (click)="toggleRightSidenav()">
-  <!-- <div style=" width: 40px; height: 40px; display: flex; justify-content:center; text-align: center;">
-    <div style="height: 100%; display: flex; flex-direction: column; justify-content:center;">
-      <i style="color: white;" class="fa fa-plus" aria-hidden="true"></i>
-    </div>
-  </div> -->
+<div class="add-expense" (click)="toggleTools()">
   <button mat-mini-fab>
     <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
   </button>
-
 </div>
 
-<mat-sidenav-container (backdropClick)="closeAllSidenavs()">
+<div style="position: fixed; top: 130px; z-index: 3; right: 20px;" *ngIf="visible" [@slideInOut]>
+  <div style="display:flex; justify-content:center;">
+    <button mat-mini-fab style="background-color:rgb(85, 194, 85);">
+      <mat-icon aria-label="Example icon-button with a heart icon">attach_money</mat-icon>
+    </button>
+  </div>
+  <div style="display:flex; justify-content:center; margin-top: 20px;">
+    <button mat-mini-fab style="background-color:rgb(226, 43, 83);">
+      <mat-icon aria-label="Example icon-button with a heart icon">money_off</mat-icon>
+    </button>
+  </div>
+  <div style="display:flex; justify-content:center; margin-top: 20px;">
+    <button mat-mini-fab style="background-color:pink;">
+      <mat-icon aria-label="Example icon-button with a heart icon">favorite</mat-icon>
+    </button>
+  </div>
+</div>
+
+<mat-sidenav-container (backdropClick)="closeSidenav('Backdrop')">
 
   <mat-sidenav style="display:flex; flex-direction:column; width:60%;" #sidenav (keydown.escape)="closeSidenav('escape')" disableClose>
     <div>
@@ -150,24 +162,5 @@
     </mat-card>
 
   </mat-sidenav-content>
-
-  <mat-sidenav align="end" style="background-color: rgba(255, 255, 255, 0); display:flex; flex-direction:column; width:20%; box-shadow: none;"
-    #rightSidenav (keydown.escape)="closeRightSidenav()" disableClose>
-    <div style="display:flex; justify-content:center; margin-top: 70px;">
-      <button mat-mini-fab style="background-color:rgb(85, 194, 85);">
-        <mat-icon aria-label="Example icon-button with a heart icon">attach_money</mat-icon>
-      </button>
-    </div>
-    <div style="display:flex; justify-content:center; margin-top: 20px;">
-      <button mat-mini-fab style="background-color:rgb(226, 43, 83);">
-        <mat-icon aria-label="Example icon-button with a heart icon">money_off</mat-icon>
-      </button>
-    </div>
-    <div style="display:flex; justify-content:center; margin-top: 20px;">
-      <button mat-mini-fab style="background-color:pink;">
-        <mat-icon aria-label="Example icon-button with a heart icon">favorite</mat-icon>
-      </button>
-    </div>
-  </mat-sidenav>
 
 </mat-sidenav-container>

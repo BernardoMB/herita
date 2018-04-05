@@ -9,10 +9,23 @@ import { Chart } from 'chart.js';
 import { Observable } from 'rxjs/Observable';
 import { IUser } from '../../../../shared/models/IUser';
 
+import { trigger, transition, animate, style } from '@angular/animations';
+
 @Component({
   selector: 'main',
   templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss']
+  styleUrls: ['./main.component.scss'],
+  animations: [
+    trigger('slideInOut', [
+      transition(':enter', [
+        style({transform: 'translateY(-100%)'}),
+        animate('200ms ease-in', style({transform: 'translateY(0%)'}))
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({transform: 'translateY(-100%)'}))
+      ])
+    ])
+  ]
 })
 export class MainComponent implements OnInit {
   @ViewChild('sidenav') sidenav: MatSidenav;
@@ -131,15 +144,6 @@ export class MainComponent implements OnInit {
     this.sidenav.close();
   }
   
-  closeRightSidenav(): void {
-    this.rightSidenav.close();
-  }
-  
-  closeAllSidenavs(): void {
-    this.sidenav.close();
-    this.rightSidenav.close();
-  }
-
   public toggleSidenav(): void {
     this.showSidenav = !this.showSidenav;
     if (this.showSidenav) {
@@ -149,13 +153,9 @@ export class MainComponent implements OnInit {
     }
   }
 
-  public toggleRightSidenav(): void {
-    this.showRightSidenav = !this.showRightSidenav;
-    if (this.showRightSidenav) {
-      this.rightSidenav.open();
-    } else {
-      this.closeRightSidenav();
-    }
+  public visible: boolean = false;
+  public toggleTools(): void {
+    this.visible = !this.visible;
   }
 
   public onGoToHomePage(): void {
