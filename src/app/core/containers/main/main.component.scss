@@ -26,3 +26,12 @@
     top: 70px;
     background-color: $app-primary;
 }
+
+.tab {
+    color: rgb(112, 112, 112); 
+    outline: none;
+}
+
+.active {
+    color: $app-secondary;
+}

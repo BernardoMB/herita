@@ -18,10 +18,13 @@ import { ToastyModule } from 'ng2-toasty';
 import { DndModule } from 'ng2-dnd';
 import { Ng2CompleterModule } from 'ng2-completer';
 import { UserService } from './services/user.service';
+import { DashboardComponent } from './containers/dashboard/dashboard.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
     CommonModule,
+    RouterModule,
     FormsModule,
     ReactiveFormsModule,
     // Material components
@@ -39,7 +42,8 @@ import { UserService } from './services/user.service';
     MainComponent,
     LoginComponent,
     NotFoundComponent,
-    SignUpComponent],
+    SignUpComponent,
+    DashboardComponent],
   exports: [
     MainComponent,
     LoginComponent,

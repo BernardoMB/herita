@@ -1,65 +1,3 @@
-<!-- <header-simple [showLogout]="userLoggedIn"></header-simple>
-
-<div class="alternative">
-  <mat-toolbar color="accent" style="height: 100px; display: flex; flex-direction:column; justify-content:center;">
-    <mat-toolbar-row>
-      <span>Dog Breeds App</span>
-      <span class="example-spacer"></span>
-      <mat-icon class="example-icon">favorite</mat-icon>
-      <mat-icon class="example-icon">delete</mat-icon>
-    </mat-toolbar-row>
-  </mat-toolbar>
-
-  <div style="height: 20px;"></div>
-
-  <mat-card class="example-card">
-    <mat-card-header>
-      <div mat-card-avatar class="example-header-image"></div>
-      <mat-card-title>Shiba Inu</mat-card-title>
-      <mat-card-subtitle>Dog Breed</mat-card-subtitle>
-    </mat-card-header>
-    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
-    <mat-card-content>
-      <p>
-        The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog that copes
-        very well with mountainous terrain, the Shiba Inu was originally bred for hunting.
-      </p>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-raised-button color="accent">LIKE</button>
-      <button mat-raised-button color="accent">SHARE</button>
-    </mat-card-actions>
-  </mat-card>
-
-  <div style="height: 20px;"></div>
-
-  <mat-card class="example-card">
-    <mat-card-header>
-      <div mat-card-avatar class="example-header-image2"></div>
-      <mat-card-title>Lhasa Apso</mat-card-title>
-      <mat-card-subtitle>Dog Breed</mat-card-subtitle>
-    </mat-card-header>
-    <img mat-card-image src="https://scontent.fmex7-1.fna.fbcdn.net/v/t1.0-9/13239488_919808771451322_7502245245848236235_n.jpg?_nc_cat=0&oh=2d03a9ef2dbd50cac22b7110c204478a&oe=5B42244E"
-      alt="Photo of a Shiba Inu">
-    <mat-card-content>
-      <p>
-        The Lhasa Apso is a non-sporting dog breed originating in Tibet. It was bred as an interior sentinel in the Buddhist monasteries,
-        to alert the monks to any intruders who entered. Lhasa is the capital city of Tibet, and apso is a word in the Tibetan
-        language meaning "bearded", so, Lhasa Apso simply means "long-haired Lhasa dog".
-      </p>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-raised-button color="accent">LIKE</button>
-      <button mat-raised-button color="accent">SHARE</button>
-    </mat-card-actions>
-  </mat-card>
-</div> -->
-
-<!-- <p>
-  main works!
-</p> -->
-
-
 <mat-toolbar color="primary" style="display: flex; justify-content: center;">
   <div (click)="onGoToHomePage()" style="height: 32px; width: 32px; background: url(../../../../assets/images/header-icon-white.svg); background-size: 100% 100%;"></div>
   <div style="position: absolute; left: 15px;" (click)="toggleSidenav()">
@@ -73,6 +11,7 @@
   </button>
 </div>
 
+<!-- Menu de acciones -->
 <div style="position: fixed; top: 130px; z-index: 3; right: 20px;" *ngIf="visible" [@slideInOut]>
   <div style="display:flex; justify-content:center;">
     <button mat-mini-fab style="background-color:rgb(85, 194, 85);">
@@ -93,6 +32,7 @@
 
 <mat-sidenav-container (backdropClick)="closeSidenav('Backdrop')">
 
+  <!-- SIDENAV -->
   <mat-sidenav style="display:flex; flex-direction:column; width:60%;" #sidenav (keydown.escape)="closeSidenav('escape')" disableClose>
     <div>
       {{ username }}
@@ -102,17 +42,11 @@
     </div>
   </mat-sidenav>
 
+  <!-- CONTENT -->
   <mat-sidenav-content style="">
-    <!-- <p>Closed due to: {{reason}}</p> -->
-
     <div style="height: 20px;"></div>
-
-    <div *ngIf="chart">
-      <canvas id="canvas">{{ chart }}</canvas>
-    </div>
-
-    <div style="height: 20px;"></div>
-
+    <router-outlet></router-outlet>
+    <!-- Shiba Inu -->
     <mat-card class="example-card">
       <mat-card-header>
         <div mat-card-avatar class="example-header-image"></div>
@@ -131,15 +65,8 @@
         <button mat-raised-button color="accent">SHARE</button>
       </mat-card-actions>
     </mat-card>
-
     <div style="height: 20px;"></div>
-
-    <div *ngIf="chart2">
-      <canvas id="canvas2">{{ chart }}</canvas>
-    </div>
-
-    <div style="height: 20px;"></div>
-
+    <!-- Lhasa Apso -->
     <mat-card class="example-card">
       <mat-card-header>
         <div mat-card-avatar class="example-header-image2"></div>
@@ -160,7 +87,32 @@
         <button mat-raised-button color="accent">SHARE</button>
       </mat-card-actions>
     </mat-card>
-
+    <div style="display: flex; position: fixed; bottom: 0px; width: 100%; height: 55px; background-color: white; box-shadow: 0 10px 16px 5px #333; font: 500 11px/20px Roboto, 'Helvetica Neue', sans-serif;">
+      <div class="tab" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
+        <div style="display: flex; justify-content: center;">
+          <i class="material-icons">dashboard</i>
+        </div>
+        <div style="display: flex; justify-content: center;">
+          <div>Dashboard</div>
+        </div>
+      </div>
+      <div class="tab" routerLink="/transactions" routerLinkActive="active" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
+        <div style="display: flex; justify-content: center;">
+          <i class="material-icons">monetization_on</i>
+        </div>
+        <div style="display: flex; justify-content: center;">
+          <div>Transactions</div>
+        </div>
+      </div>
+      <div class="tab" routerLink="/budgets" routerLinkActive="active" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
+        <div style="display: flex; justify-content: center;">
+          <i class="material-icons">account_balance_wallet</i>
+        </div>
+        <div style="display: flex; justify-content: center;">
+          <div>Budgets</div>
+        </div>
+      </div>
+    </div>
   </mat-sidenav-content>
 
 </mat-sidenav-container>
