@@ -16,6 +16,7 @@ export class DashboardComponent implements OnInit {
 
   public user: Observable<IUser>;
   public userid;
+  public userFirstLogin: boolean;
 
   constructor(
     private elementRef: ElementRef,
@@ -25,11 +26,17 @@ export class DashboardComponent implements OnInit {
     this.user.subscribe((user: IUser) => {
       if (user) {
         this.userid = user._id;
+        this.userFirstLogin = user.firstTimeLogin;
       }
     });
   }
 
   ngOnInit() {
+    if (this.userFirstLogin) {
+      console.log('Show modal');
+    } else {
+      console.log('Do not show modal');
+    }
     this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#fafafa';
     setTimeout(() => {
       var ctx = document.getElementById("canvas");
