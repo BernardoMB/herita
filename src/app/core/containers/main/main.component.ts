@@ -44,8 +44,10 @@ export class MainComponent implements OnInit {
   ) {
     this.user = this.store.select(state => state.uiState.user);
     this.user.subscribe(user => {
-      this.username = user.username;
-      if (user) this.userLoggedIn = true;
+      if (!!user) {
+        this.username = user.username;
+        if (user) this.userLoggedIn = true;
+      }
     });
   }
 

@@ -36,6 +36,10 @@ const UserSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'Rol required']
     },
+    firstTimeLogin: {
+        type: Boolean,
+        required: true
+    },
     tokens: [{
         access: {
             type: String,

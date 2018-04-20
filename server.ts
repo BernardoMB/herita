@@ -37,9 +37,10 @@ app.get('/*', (req, res) => {
 //#region API Routes
     app.post('/api/user', (request, response) => {
         console.log('POST /api/user', request.body);
-        var body = _.pick(request.body, ['username', 'email', 'password', 'rol']);
+        var body = _.pick(request.body, ['username', 'email', 'password', 'rol', 'firstTimeLogin']);
         var user: any = new User(body);
         user.save().then(() => {
+            console.log('User saved');
             return user.generateAuthToken().then(token => {
                 // Respond to the client sending back the token in the 'x-auth' header.
                 response.header('x-auth', token).status(200).send(user);
@@ -47,7 +48,7 @@ app.get('/*', (req, res) => {
                 response.status(400).send('Could not generate token');
             });
         }, (err) => {
-            console.log('Error saving user');
+            console.log('Error saving user', err);
             if (err.code == 11000) {
                 console.log('Duplicate value');
                 let invalidField = err.message.split('index: ')[1].split('_1')[0];

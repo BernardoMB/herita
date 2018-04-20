@@ -163,7 +163,8 @@ export class SignUpComponent implements OnInit {
       username: credentials.username,
       email: credentials.email,
       password: credentials.password,
-      rol: 2
+      rol: 2,
+      firstTimeLogin: true
     }
     this.store.dispatch(new CreateUserAction(user));
   }
