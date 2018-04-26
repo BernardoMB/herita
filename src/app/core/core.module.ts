@@ -18,8 +18,9 @@ import { ToastyModule } from 'ng2-toasty';
 import { DndModule } from 'ng2-dnd';
 import { Ng2CompleterModule } from 'ng2-completer';
 import { UserService } from './services/user.service';
-import { DashboardComponent } from './containers/dashboard/dashboard.component';
+import { DashboardComponent, DialogOverviewExampleDialog } from './containers/dashboard/dashboard.component';
 import { RouterModule } from '@angular/router';
+import { MatDialog, MatDialogModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -37,13 +38,16 @@ import { RouterModule } from '@angular/router';
     ToastyModule.forRoot(),
     DndModule.forRoot(),
     Ng2CompleterModule,
+    // Services
+    MatDialogModule
   ],
   declarations: [
     MainComponent,
     LoginComponent,
     NotFoundComponent,
     SignUpComponent,
-    DashboardComponent],
+    DashboardComponent,
+    DialogOverviewExampleDialog],
   exports: [
     MainComponent,
     LoginComponent,
@@ -53,21 +57,23 @@ import { RouterModule } from '@angular/router';
     SlimLoadingBarModule,
     ToastyModule,
     DndModule,
-    Ng2CompleterModule
-  ]
+    Ng2CompleterModule,
+    DialogOverviewExampleDialog
+  ],
+  entryComponents: [DialogOverviewExampleDialog]
 })
 export class CoreModule {
 
-  constructor(@Optional() @SkipSelf() parentModule: CoreModule ) {
+  constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
     if (parentModule) {
-      throw new Error ('Error, core module already exists.');
+      throw new Error('Error, core module already exists.');
     }
   }
 
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: CoreModule,
-      providers: [AuthGuard, UserService]
+      providers: [AuthGuard, UserService, MatDialog]
     };
   }
 

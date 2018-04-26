@@ -1,9 +1,10 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, Inject } from '@angular/core';
 import { IApplicationState } from '../../../store/models/app-state';
 import { Store } from '@ngrx/store';
 import { Chart } from 'chart.js';
 import { Observable } from 'rxjs/Observable';
 import { IUser } from '../../../../shared/models/IUser';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'dashboard',
@@ -18,9 +19,25 @@ export class DashboardComponent implements OnInit {
   public userid;
   public userFirstLogin: boolean;
 
+  // Modal
+  name;
+  animal;
+  openDialog(): void {
+    let dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+      width: '250px',
+      data: { name: this.name, animal: this.animal }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.animal = result;
+    });
+  }
+
   constructor(
     private elementRef: ElementRef,
     private store: Store<IApplicationState>,
+    public dialog: MatDialog
   ) {
     this.user = this.store.select(state => state.uiState.user);
     this.user.subscribe((user: IUser) => {
@@ -112,6 +129,23 @@ export class DashboardComponent implements OnInit {
       });
 
     }, 1);
+  }
+
+}
+
+@Component({
+  selector: 'dialog-overview-example-dialog',
+  templateUrl: 'dialog-overview-example-dialog.html',
+})
+export class DialogOverviewExampleDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 
 }
