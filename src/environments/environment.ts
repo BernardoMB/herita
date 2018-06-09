@@ -13,5 +13,6 @@ export const environment = {
   // San Agustin 78
   // url: 'http://192.168.1.64:300'
   // ITAM
-  url: 'http://10.6.69.183:300'
+  // url: 'http://10.6.69.183:300'
+  url: 'http://10.123.1.203:300'
 };
