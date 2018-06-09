@@ -40,6 +40,10 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         required: true
     },
+    verified: {
+        type: Boolean,
+        required: [true, 'Verified required']
+    },
     tokens: [{
         access: {
             type: String,
@@ -55,9 +59,9 @@ const UserSchema = new mongoose.Schema({
 // Define the INSTANCE METHODS.
 
 UserSchema.methods.generateAuthToken = function () {
-    var user = this;
-    var access = 'auth';
-    var token = jwt.sign({
+    const user = this;
+    const access = 'auth';
+    const token = jwt.sign({
         _id: user._id.toHexString(),
         access
     }, process.env.JWT_SECRET).toString();
@@ -73,7 +77,7 @@ UserSchema.methods.generateAuthToken = function () {
 };
 
 UserSchema.methods.removeToken = function (token) {
-    var user = this;
+    const user = this;
     // Remember that update returns a promise if no then() callback provided.
     return user.update({
         // MongoDB operator '$pull' let us remove items from an array that match certain criterea. 
@@ -90,7 +94,7 @@ UserSchema.methods.removeToken = function (token) {
 // Visit the documentation to see how 'pre' operates.
 UserSchema.pre('save', function (next) {
     // Get acces to the individual document.
-    var user = this;
+    const user = this;
     // To do not rehash the value every time we update the doc we should use 'isModified()'.
     if (user.isModified('password')) {
         bcrypt.genSalt(10, (error, salt) => {
@@ -106,7 +110,7 @@ UserSchema.pre('save', function (next) {
 
 UserSchema.statics.findByToken = function (token) {
     var User = this;
-    var decoded;
+    let decoded;
     try {
         decoded = jwt.verify(token, process.env.JWT_SECRET);
     } catch (e) {

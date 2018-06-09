@@ -164,7 +164,8 @@ export class SignUpComponent implements OnInit {
       email: credentials.email,
       password: credentials.password,
       rol: 2,
-      firstTimeLogin: true
+      firstTimeLogin: true,
+      verified: false
     }
     this.store.dispatch(new CreateUserAction(user));
   }

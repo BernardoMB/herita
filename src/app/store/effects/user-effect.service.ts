@@ -1,14 +1,26 @@
 import { IUser } from '../../../shared/models/IUser';
 import { Http } from '@angular/http';
-import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Rx';
-import { ToastyService, ToastyConfig, ToastOptions, ToastData } from "ng2-toasty";
+import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
 import * as moment from 'moment';
 import { CookieService } from 'ngx-cookie';
-import { USER_LOGIN_ATTEMPT_ACTION, UserLoggedInAction, ErrorOcurredAction, USER_LOGGED_IN_ACTION, ERROR_OCURRED_ACTION, USER_LOGGED_OUT_ACTION, CREATE_USER_ACTION, CreatedUserAction, CREATED_USER_ACTION } from '../actions/uiState.actions';
+import { 
+    USER_LOGIN_ATTEMPT_ACTION,
+    UserLoggedInAction,
+    ErrorOcurredAction,
+    USER_LOGGED_IN_ACTION,
+    ERROR_OCURRED_ACTION,
+    USER_LOGGED_OUT_ACTION,
+    CREATE_USER_ACTION,
+    CreatedUserAction,
+    CREATED_USER_ACTION, 
+    UserLoginAttemptAction,
+    CreateUserAction,
+    UserLoggedOutAction
+} from '../actions/uiState.actions';
 import { UserService } from '../../core/services/user.service';
 
 @Injectable()
@@ -17,8 +29,8 @@ export class UserEffectService {
     @Effect()
     onUserLoginAttempt$: Observable<Action> = this.action$
         .ofType(USER_LOGIN_ATTEMPT_ACTION)
-        .debug("Effect: Attempting login")
-        .do(action => {
+        .debug('Effect: Attempting login')
+        .do((action: UserLoginAttemptAction) => {
             this.toastyService.info({
                 title: 'Loggin in',
                 msg: `${moment().locale('US').calendar()}`,
@@ -26,7 +38,7 @@ export class UserEffectService {
                 timeout: 1500
             });
         })
-        .switchMap((action: any) => this.userService.login(action.payload)
+        .switchMap((action: UserLoginAttemptAction) => this.userService.login(action.payload)
             .map((user: IUser) => {
                 console.log('Effect: mapped to user:', user);
                 return new UserLoggedInAction(user);
@@ -34,13 +46,13 @@ export class UserEffectService {
                 console.log('Effect: catched error', err);
                 return Observable.of(new ErrorOcurredAction(err))
             }))
-        .debug("Effect: Login attempt server response");
+        .debug('Effect: Login attempt server response');
         
     @Effect()
     onCreateUserAction$: Observable<Action> = this.action$
         .ofType(CREATE_USER_ACTION)
-        .debug("Effect: Creating user")
-        .do(action => {
+        .debug('Effect: Creating user')
+        .do((action: CreateUserAction) => {
             this.toastyService.info({
                 title: 'Creating user',
                 msg: `${moment().locale('US').calendar()}`,
@@ -48,7 +60,7 @@ export class UserEffectService {
                 timeout: 1500
             });
         })
-        .switchMap((action: any) => this.userService.createUser(action.payload)
+        .switchMap((action: CreateUserAction) => this.userService.createUser(action.payload)
             .map((user: IUser) => {
                 console.log('Effect: mapped to user:', user);
                 return new CreatedUserAction(user);
@@ -56,13 +68,13 @@ export class UserEffectService {
                 console.log('Effcte: catched error:', err);
                 return Observable.of(new ErrorOcurredAction(err))
             })
-        ).debug("Effect: creating user server response");
+        ).debug('Effect: creating user server response');
         
     @Effect({ dispatch: false })
     onUserLoggedIn$: Observable<Action> = this.action$
         .ofType(USER_LOGGED_IN_ACTION)
-        .debug("Effect: User logged in")
-        .do((action: any) => {
+        .debug('Effect: User logged in')
+        .do((action: UserLoggedInAction) => {
             this.cookieService.putObject('usr', action.payload, { /* expires: moment().hours(11).minute(59).second(59).toDate() */ });
             const usr = this.cookieService.getObject('usr');
             console.log('Effect: placed user cookie', usr);
@@ -79,8 +91,8 @@ export class UserEffectService {
     @Effect({ dispatch: false })
     userLoggedOut$: Observable<Action> = this.action$
         .ofType(USER_LOGGED_OUT_ACTION)
-        .debug("User logged out")
-        .do(action => {
+        .debug('User logged out')
+        .do((action: UserLoggedOutAction) => {
             this.cookieService.remove('usr');
             this.toastyService.success({
                 title: 'Logged out',
@@ -93,8 +105,8 @@ export class UserEffectService {
     @Effect({ dispatch: false })
     onCreatedUserAction$: Observable<Action> = this.action$
         .ofType(CREATED_USER_ACTION)
-        .debug("Created user")
-        .do((action: any) => {
+        .debug('Created user')
+        .do((action: CreatedUserAction) => {
             this.toastyService.success({
                 title: 'User created',
                 msg: `${action.payload.username} is now a user`,
@@ -106,8 +118,8 @@ export class UserEffectService {
     @Effect({ dispatch: false })
     onErrorOcurredAction$: Observable<Action> = this.action$
         .ofType(ERROR_OCURRED_ACTION)
-        .debug("Error ocurred")
-        .do((action: any) => {
+        .debug('Error ocurred')
+        .do((action: ErrorOcurredAction) => {
             this.toastyService.error({
                 title: 'Error',
                 msg: `${action.payload}`,
@@ -116,13 +128,13 @@ export class UserEffectService {
             });
         });
 
-    constructor(private action$: Actions,
+    constructor(
+        private action$: Actions,
         public toastyService: ToastyService,
         public toastyConfig: ToastyConfig,
         private cookieService: CookieService,
-        private http: Http,
-        private userService: UserService)
-    {
+        private userService: UserService
+    ) {
         this.toastyConfig.theme = 'material';
         this.toastyConfig.position = 'bottom-center';
     }

@@ -37,7 +37,7 @@ app.get('/*', (req, res) => {
 //#region API Routes
 app.post('/api/user', (request, response) => {
     console.log('POST /api/user', request.body);
-    var body = _.pick(request.body, ['username', 'email', 'password', 'rol', 'firstTimeLogin']);
+    var body = _.pick(request.body, ['username', 'email', 'password', 'rol', 'firstTimeLogin', 'verified']);
     var user: any = new User(body);
     user.save().then(() => {
         console.log('User saved');

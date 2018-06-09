@@ -4,5 +4,6 @@ export interface IUser {
     email: string,
     password: string,
     rol: number,
-    firstTimeLogin: boolean
+    firstTimeLogin: boolean,
+    verified: boolean
 }
