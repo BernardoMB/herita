@@ -7,7 +7,7 @@ import { UserLoginAttemptAction } from '../../../store/actions/uiState.actions';
 import { UserService } from '../../services/user.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
-interface ILoginModel {
+export interface ILoginModel {
   username: string;
   password: string;
 }

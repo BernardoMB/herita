@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Http } from '@angular/http';
 import { IUser } from '../../../shared/models/IUser';
 import { environment } from '../../../environments/environment';
+import { ILoginModel } from '../containers/login/login.component';
 
 @Injectable()
 export class UserService {
@@ -17,7 +18,7 @@ export class UserService {
         this.url = environment.url;
     }
 
-    public login(credentials: { username: string, password: string}): Observable<any> {
+    public login(credentials: ILoginModel): Observable<any> {
         return this.http.post(`${this.url}/api/users/login`, credentials)
             .map((response: any) => {
                 // response.status 200

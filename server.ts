@@ -35,62 +35,64 @@ app.get('/*', (req, res) => {
 });
 
 //#region API Routes
-    app.post('/api/user', (request, response) => {
-        console.log('POST /api/user', request.body);
-        var body = _.pick(request.body, ['username', 'email', 'password', 'rol', 'firstTimeLogin']);
-        var user: any = new User(body);
-        user.save().then(() => {
-            console.log('User saved');
-            return user.generateAuthToken().then(token => {
-                // Respond to the client sending back the token in the 'x-auth' header.
-                response.header('x-auth', token).status(200).send(user);
-            }, err => {
-                response.status(400).send('Could not generate token');
-            });
-        }, (err) => {
-            console.log('Error saving user', err);
-            if (err.code == 11000) {
-                console.log('Duplicate value');
-                let invalidField = err.message.split('index: ')[1].split('_1')[0];
-                console.log('Invalid field:', invalidField);
-                switch(invalidField) { 
-                    case 'username': { 
-                        response.status(409).send('Username already taken');
-                        break; 
-                    } 
-                    case 'email': { 
-                        response.status(409).send('An account with that email address already exists');
-                        break; 
-                    } 
-                    default: { } 
-                 } 
+app.post('/api/user', (request, response) => {
+    console.log('POST /api/user', request.body);
+    var body = _.pick(request.body, ['username', 'email', 'password', 'rol', 'firstTimeLogin']);
+    var user: any = new User(body);
+    user.save().then(() => {
+        console.log('User saved');
+        return user.generateAuthToken().then(token => {
+            // Respond to the client sending back the token in the 'x-auth' header.
+            response.header('x-auth', token).status(200).send(user);
+        }, err => {
+            response.status(400).send('Could not generate token');
+        });
+    }, (err) => {
+        console.log('Error saving user', err);
+        if (err.code == 11000) {
+            console.log('Duplicate value');
+            let invalidField = err.message.split('index: ')[1].split('_1')[0];
+            console.log('Invalid field:', invalidField);
+            switch (invalidField) {
+                case 'username': {
+                    response.status(409).send('Username already taken');
+                    break;
+                }
+                case 'email': {
+                    response.status(409).send('An account with that email address already exists');
+                    break;
+                }
+                default: { }
             }
-        });
+        }
     });
+});
 
-    // POST /api/users/login
-    // Every time a user logs in a new token will be generated for that user.
-    app.post('/api/users/login', (request, response) => {
-        var body = _.pick(request.body, ['username', 'email', 'password']);
-        // We will use a custom model method.
-        (<any>User).findByCredentials(body.username, body.email, body.password).then((user) => {
-            // Send Back the user.
-            return user.generateAuthToken().then((token) => {
-                response.header('x-auth', token).status(200).send(user);
-            });
-        }).catch((error) => {
-            response.status(404).send(error);
+// POST /api/users/login
+// Every time a user logs in a new token will be generated for that user.
+app.post('/api/users/login', (request, response) => {
+    console.log('POST /api/user/login', request.body);
+    const credentials = _.pick(request.body, ['username', 'email', 'password']);
+    console.log('Got credentials', credentials);
+    // We will use a custom model method.
+    (<any>User).findByCredentials(credentials.username, credentials.email, credentials.password).then((user) => {
+        // Send Back the user.
+        return user.generateAuthToken().then((token) => {
+            response.header('x-auth', token).status(200).send(user);
         });
+    }).catch((error) => {
+        response.status(404).send(error);
     });
+});
 
-    // DELETE /api/users/me/token
-    app.delete('/users/me/token', authenticate, (request: any, res) => {
-        request.user.removeToken(request.token).then(() => {
-            res.status(200).send();
-        }, () => {
-            res.status(400).send();
-        });
+// DELETE /api/users/me/token
+app.delete('/users/me/token', authenticate, (request: any, res) => {
+    request.user.removeToken(request.token).then(() => {
+        res.status(200).send();
+    }, () => {
+        res.status(400).send();
     });
+});
 //#endregion
 
 app.listen(port, () => {
