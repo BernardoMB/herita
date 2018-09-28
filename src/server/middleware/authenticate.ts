@@ -1,11 +1,12 @@
-var {User} = require('./../models/user');
+const { User } = require('./../models/user');
 
-var authenticate = (request, response, next) => {
-  var token = request.header('x-auth');
+const authenticate = (request, response, next) => {
+  const token = request.header('x-auth');
 
   // findByToken returns a promise so we call .then() to
   User.findByToken(token).then((user) => {
-    // If there is no user whose token is the one provided, then return a rejected promise so the catch below get executed.
+    // If there is no user whose token is the one provided, 
+    // then return a rejected promise so the catch below gets executed.
     if (!user) {
       return Promise.reject(null);
     }

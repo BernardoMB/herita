@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from "rxjs/Subject";
+import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { Http } from '@angular/http';
 import { IUser } from '../../../shared/models/IUser';
@@ -43,8 +43,8 @@ export class UserService {
                 // response.status 200
                 console.log('User service: response status:', response.status);
                 this.passSignUpError.next(['', 0]); // Se nextea 0 porque no hay error.
-                const user: IUser = JSON.parse(response._body);
-                return user;
+                const createdUser: IUser = JSON.parse(response._body);
+                return createdUser;
             }).catch(responseBadStatus => {
                 // response.status other than 200
                 console.log('User service: bad response status:', responseBadStatus.status);
