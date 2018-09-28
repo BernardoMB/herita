@@ -3,18 +3,18 @@ require('./src/server/config/config.ts');
 import * as express from 'express';
 import * as path from 'path';
 
-var { authenticate } = require('./src/server/middleware/authenticate');
+const { authenticate } = require('./src/server/middleware/authenticate');
 const { mongoose } = require('./src/server/db/mongoose');
-var { ObjectID } = require('mongodb');
-var bodyParser = require('body-parser');
+const { ObjectID } = require('mongodb');
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const _ = require('lodash');
 
 import { IUser } from './src/shared/models/IUser';
 import User from './src/server/models/user';
 
-var app: express.Application = express();
-var port = process.env.PORT;
+const app: express.Application = express();
+const port = process.env.PORT;
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -37,21 +37,28 @@ app.get('/*', (req, res) => {
 //#region API Routes
 app.post('/api/user', (request, response) => {
     console.log('POST /api/user', request.body);
-    var body = _.pick(request.body, ['username', 'email', 'password', 'rol', 'firstTimeLogin', 'verified']);
-    var user: any = new User(body);
+    const body = _.pick(request.body, [
+        'username',
+        'email',
+        'password',
+        'rol',
+        'firstTimeLogin',
+        'verified'
+    ]);
+    const user: any = new User(body);
     user.save().then(() => {
         console.log('User saved');
         return user.generateAuthToken().then(token => {
             // Respond to the client sending back the token in the 'x-auth' header.
-            response.header('x-auth', token).status(200).send(user);
+            response.status(200).header('x-auth', token).send(user);
         }, err => {
             response.status(400).send('Could not generate token');
         });
     }, (err) => {
         console.log('Error saving user', err);
-        if (err.code == 11000) {
+        if (err.code === 11000) {
             console.log('Duplicate value');
-            let invalidField = err.message.split('index: ')[1].split('_1')[0];
+            const invalidField = err.message.split('index: ')[1].split('_1')[0];
             console.log('Invalid field:', invalidField);
             switch (invalidField) {
                 case 'username': {
@@ -62,7 +69,10 @@ app.post('/api/user', (request, response) => {
                     response.status(409).send('An account with that email address already exists');
                     break;
                 }
-                default: { }
+                default: {
+                    response.status(409).send('Email or username already taken');
+                    break;
+                }
             }
         }
     });

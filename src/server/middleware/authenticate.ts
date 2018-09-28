@@ -15,8 +15,9 @@ const authenticate = (request, response, next) => {
     request.token = token;
     next();
   }).catch((e) => {
+    console.log('Error finding user by token', e);
     response.status(401).send();
   });
 };
 
-module.exports = {authenticate};
+module.exports = { authenticate };
