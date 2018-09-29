@@ -3,7 +3,7 @@ import { IApplicationState } from '../../../store/models/app-state';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { MatSidenav } from '@angular/material';
-import { UserLoggedOutAction } from '../../../store/actions/uiState.actions';
+import { UserLoggedOutAction, UserLogoutAttemptAction } from '../../../store/actions/uiState.actions';
 
 import { Observable } from 'rxjs/Observable';
 import { IUser } from '../../../../shared/models/IUser';
@@ -30,23 +30,30 @@ export class MainComponent implements OnInit {
   @ViewChild('sidenav') sidenav: MatSidenav;
   @ViewChild('rightSidenav') rightSidenav: MatSidenav;
 
-  public userLoggedIn: boolean = false;
-  public showSidenav: boolean = false;
-  public showRightSidenav: boolean = false;
+  public userLoggedIn = false;
+  public showSidenav = false;
+  public showRightSidenav = false;
 
-  public user: Observable<IUser>;
+  public user$: Observable<IUser>;
+  public user: IUser;
   public username: string;
+
+  public reason = '';
+  public visible = false;
 
   constructor(
     private elementRef: ElementRef,
     private store: Store<IApplicationState>,
     private router: Router
   ) {
-    this.user = this.store.select(state => state.uiState.user);
-    this.user.subscribe(user => {
+    this.user$ = this.store.select(state => state.uiState.user);
+    this.user$.subscribe(user => {
       if (!!user) {
+        this.user = user;
         this.username = user.username;
-        if (user) this.userLoggedIn = true;
+        if (user) {
+          this.userLoggedIn = true;
+        }
       }
     });
   }
@@ -54,10 +61,7 @@ export class MainComponent implements OnInit {
   ngOnInit() {
     this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#fafafa';
   }
-
-
-  public reason = '';
-
+  
   closeSidenav(reason: string): void {
     this.reason = reason;
     this.sidenav.close();
@@ -72,7 +76,6 @@ export class MainComponent implements OnInit {
     }
   }
 
-  public visible: boolean = false;
   public toggleTools(): void {
     this.visible = !this.visible;
   }
@@ -83,7 +86,7 @@ export class MainComponent implements OnInit {
 
   public onLogOut(): void {
     this.router.navigate(['/login']);
-    this.store.dispatch(new UserLoggedOutAction());
+    this.store.dispatch(new UserLogoutAttemptAction(this.user));
   }
 
 }

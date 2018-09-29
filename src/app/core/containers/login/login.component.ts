@@ -8,7 +8,7 @@ import { UserService } from '../../services/user.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 export interface ILoginModel {
-  username: string;
+  credential: string; // username || password
   password: string;
 }
 
@@ -27,9 +27,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
   
   public userSubscription: Subscription;
 
-  public hide: boolean = true;
+  public hide = true;
   
-  public loginErrorOcurred: boolean = false;
+  public loginErrorOcurred = false;
   public loginTypeError: number;
   public loginErrorMessage: string;
 
@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     });
     this.userService.passLoginError.subscribe(payload => {
       this.loginTypeError = payload[1];
-      if (this.loginTypeError == 0) {
+      if (this.loginTypeError === 0) {
         // No error from server.
         this.loginErrorOcurred = false;
         this.loginErrorMessage = null;
@@ -75,7 +75,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
     if (!this.isValid) {
       return;
     };
-    const credentials: ILoginModel = this.loginForm.value;
+    const credentials: ILoginModel = {
+      credential: this.loginForm.value.username,
+      password: this.loginForm.value.password
+    }
     console.log('Dispatching UserLoginAttemptAction with credentials', credentials);
     this.store.dispatch(new UserLoginAttemptAction(credentials));
   }

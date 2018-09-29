@@ -61,8 +61,8 @@ export class UserService {
             .catch(err => Observable.throw(err));
     }
 
-    public deleteUser(user: IUser): Observable<string> {
-        return this.http.delete(`${this.url}/api/user/${user._id}`)
+    public logout(user: IUser): Observable<string> {
+        return this.http.delete(`${this.url}/api/user/me/token/${user._id}`)
             .map(res => res.json())
             .catch(err => Observable.throw(err));
     }

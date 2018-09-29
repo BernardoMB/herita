@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Rx';
 import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
 import * as moment from 'moment';
 import { CookieService } from 'ngx-cookie';
-import { 
+import {
     USER_LOGIN_ATTEMPT_ACTION,
     UserLoggedInAction,
     ErrorOcurredAction,
@@ -16,12 +16,14 @@ import {
     USER_LOGGED_OUT_ACTION,
     CREATE_USER_ACTION,
     CreatedUserAction,
-    CREATED_USER_ACTION, 
+    CREATED_USER_ACTION,
     UserLoginAttemptAction,
     CreateUserAction,
-    UserLoggedOutAction
+    UserLoggedOutAction,
+    USER_LOGOUT_ATTEMPT_ACTION
 } from '../actions/uiState.actions';
 import { UserService } from '../../core/services/user.service';
+import { ILoginModel } from '../../core/containers/login/login.component';
 
 @Injectable()
 export class UserEffectService {
@@ -38,16 +40,19 @@ export class UserEffectService {
                 timeout: 1500
             });
         })
-        .switchMap((action: UserLoginAttemptAction) => this.userService.login(action.payload)
-            .map((user: IUser) => {
-                console.log('Effect: mapped to user:', user);
-                return new UserLoggedInAction(user);
-            }).catch((err: string) => {
-                console.log('Effect: catched error', err);
-                return Observable.of(new ErrorOcurredAction(err))
-            }))
-        .debug('Effect: Login attempt server response');
-        
+        .switchMap((action: UserLoginAttemptAction) => {
+            const credentials: ILoginModel = action.payload;
+            console.log('Effect: Credentials:', credentials);
+            return this.userService.login(credentials)
+                .map((user: IUser) => {
+                    console.log('Effect: mapped to user:', user);
+                    return new UserLoggedInAction(user);
+                }).catch((err: string) => {
+                    console.log('Effect: catched error', err);
+                    return Observable.of(new ErrorOcurredAction(err))
+                })
+        }).debug('Effect: Login attempt server response');
+
     @Effect()
     onCreateUserAction$: Observable<Action> = this.action$
         .ofType(CREATE_USER_ACTION)
@@ -69,7 +74,7 @@ export class UserEffectService {
                 return Observable.of(new ErrorOcurredAction(err))
             })
         ).debug('Effect: creating user server response');
-        
+
     @Effect({ dispatch: false })
     onUserLoggedIn$: Observable<Action> = this.action$
         .ofType(USER_LOGGED_IN_ACTION)
@@ -88,10 +93,23 @@ export class UserEffectService {
             }, 0);
         });
 
-    @Effect({ dispatch: false })
-    userLoggedOut$: Observable<Action> = this.action$
-        .ofType(USER_LOGGED_OUT_ACTION)
+    @Effect()
+    onUserLogoutAttempt$: Observable<Action> = this.action$
+        .ofType(USER_LOGOUT_ATTEMPT_ACTION)
         .debug('User logged out')
+        .switchMap((action: UserLoggedOutAction) => this.userService.logout(action.payload)
+            .map(() => {
+                return new UserLoggedOutAction();
+            }).catch((err: string) => {
+                console.log('Effect: catched error', err);
+                return Observable.of(new ErrorOcurredAction(err))
+            })
+        ).debug('Effect: user logged out');
+
+    @Effect({ dispatch: false })
+    onUserLoggedOut$: Observable<Action> = this.action$
+        .ofType(USER_LOGGED_OUT_ACTION)
+        .debug('Effect: user Logged out')
         .do((action: UserLoggedOutAction) => {
             this.cookieService.remove('usr');
             this.toastyService.success({
@@ -100,7 +118,7 @@ export class UserEffectService {
                 showClose: true,
                 timeout: 3000
             });
-        });
+        })
 
     @Effect({ dispatch: false })
     onCreatedUserAction$: Observable<Action> = this.action$

@@ -12,6 +12,7 @@ const _ = require('lodash');
 
 import { IUser } from './src/shared/models/IUser';
 import User from './src/server/models/user';
+import { ILoginModel } from './src/app/core/containers/login/login.component';
 
 const app: express.Application = express();
 const port = process.env.PORT;
@@ -81,11 +82,12 @@ app.post('/api/user', (request, response) => {
 // POST /api/users/login
 // Every time a user logs in a new token will be generated for that user.
 app.post('/api/users/login', (request, response) => {
-    console.log('POST /api/user/login', request.body);
-    const credentials = _.pick(request.body, ['username', 'email', 'password']);
-    console.log('Got credentials', credentials);
+    console.log('POST /api/user/login');
+    console.log('Request body: ', request.body);
+    const credentials: ILoginModel = _.pick(request.body, ['credential', 'password']);
+    console.log('Trying login with credentials:', credentials);
     // We will use a custom model method.
-    (<any>User).findByCredentials(credentials.username, credentials.email, credentials.password).then((user) => {
+    (<any>User).findByCredentials(credentials.credential, credentials.password).then((user) => {
         // Send Back the user.
         return user.generateAuthToken().then((token) => {
             response.header('x-auth', token).status(200).send(user);
@@ -95,8 +97,9 @@ app.post('/api/users/login', (request, response) => {
     });
 });
 
-// DELETE /api/users/me/token
-app.delete('/users/me/token', authenticate, (request: any, res) => {
+// DELETE /api/user/me
+app.delete('/api/user/me/token/:id', authenticate, (request: any, res) => {
+    console.log('REQUEST TOKEN: ', request.token);
     request.user.removeToken(request.token).then(() => {
         res.status(200).send();
     }, () => {

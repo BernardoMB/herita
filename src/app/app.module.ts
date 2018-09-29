@@ -24,7 +24,7 @@ import { CookieModule } from 'ngx-cookie';
     BrowserAnimationsModule,
     //NoopAnimationsModule, // Uncoment this line if device is too slow to render animations properly
     // My modules
-    CoreModule.forRoot(),
+    CoreModule.forRoot(), // Call forRoot() so all services in the CoreModule are singleton
     // NgRx
     NgRxModule
   ],

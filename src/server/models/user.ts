@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import * as _ from 'lodash';
 import { IUser } from '../../shared/models/IUser';
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
@@ -58,6 +59,13 @@ const UserSchema = new mongoose.Schema({
 
 // Define the INSTANCE METHODS.
 
+// Tell what mongoose should send back when the user model is converted to a json object.
+UserSchema.methods.toJSON = function () {
+    const user = this;
+    const userObject = user.toObject();
+    return _.pick(userObject, ['_id', 'username', 'email']);
+};
+
 UserSchema.methods.generateAuthToken = function () {
     const user = this;
     const access = 'auth';
@@ -98,7 +106,7 @@ UserSchema.pre('save', function (next) {
     // To do not rehash the value every time we update the doc we should use 'isModified()'.
     if (user.isModified('password')) {
         bcrypt.genSalt(10, (error, salt) => {
-            bcrypt.hash(user.password, salt, (error, hash) => {
+            bcrypt.hash(user.password, salt, (hashError, hash) => {
                 user.password = hash;
                 next();
             });
@@ -109,7 +117,7 @@ UserSchema.pre('save', function (next) {
 });
 
 UserSchema.statics.findByToken = function (token) {
-    var User = this;
+    const UserModel = this;
     let decoded;
     try {
         decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -121,7 +129,7 @@ UserSchema.statics.findByToken = function (token) {
         //return Promise.reject();
     }
     // Return a promise so we can add a .then() call to the findByToken() call. 
-    return User.findOne({
+    return UserModel.findOne({
         '_id': decoded._id,
         // alternatively.
         //_id: decoded._id,
@@ -130,14 +138,16 @@ UserSchema.statics.findByToken = function (token) {
     });
 };
 
-UserSchema.statics.findByCredentials = function (username, email, password) {
-    var User = this;
-    return User.findOne({$or: [
-        {username: username},
-        {email: email}
-    ]}).then((user) => {
+UserSchema.statics.findByCredentials = function (credential: string, password: string) {
+    const UserModel = this;
+    return UserModel.findOne({
+        $or: [
+            { username: credential },
+            { email: credential }
+        ]
+    }).then((user) => {
         if (!user) {
-            return Promise.reject('That username does not exists');
+            return Promise.reject('That username or email address has not registered');
         }
         return new Promise((resolve, reject) => {
             // Use bcrypt.compare to compare password and user.password
