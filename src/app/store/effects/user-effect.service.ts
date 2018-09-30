@@ -20,7 +20,9 @@ import {
     UserLoginAttemptAction,
     CreateUserAction,
     UserLoggedOutAction,
-    USER_LOGOUT_ATTEMPT_ACTION
+    USER_LOGOUT_ATTEMPT_ACTION,
+    USER_LOGIN_BY_ID_AND_TOKEN_ATTEMPT_ACTION,
+    UserLoginByIdAndTokenAttemptAction
 } from '../actions/uiState.actions';
 import { UserService } from '../../core/services/user.service';
 import { ILoginModel } from '../../core/containers/login/login.component';
@@ -52,6 +54,31 @@ export class UserEffectService {
                     return Observable.of(new ErrorOcurredAction(err))
                 })
         }).debug('Effect: Login attempt server response');
+
+    @Effect()
+    onUserLoginByIdAndTokenAttempt$: Observable<Action> = this.action$
+        .ofType(USER_LOGIN_BY_ID_AND_TOKEN_ATTEMPT_ACTION)
+        .debug('Effect: Attempting login by id and token')
+        .do((action: UserLoginByIdAndTokenAttemptAction) => {
+            this.toastyService.info({
+                title: 'Loggin in with token',
+                msg: `${moment().locale('US').calendar()}`,
+                showClose: true,
+                timeout: 1500
+            });
+        })
+        .switchMap((action: UserLoginByIdAndTokenAttemptAction) => {
+            const loginObject: { userId: string, token: string } = action.payload;
+            console.log('Effect: loginObject:', loginObject);
+            return this.userService.loginByIdAndToken(loginObject)
+                .map((user: IUser) => {
+                    console.log('Effect: mapped to user:', user);
+                    return new UserLoggedInAction(user);
+                }).catch((err: string) => {
+                    console.log('Effect: catched error', err);
+                    return Observable.of(new ErrorOcurredAction(err))
+                })
+        }).debug('Effect: Login by id and token attempt server response');
 
     @Effect()
     onCreateUserAction$: Observable<Action> = this.action$

@@ -21,6 +21,12 @@ export class ToggleIsLoadingAction implements Action {
         constructor(public payload: ILoginModel) { }
     }
 
+    export const USER_LOGIN_BY_ID_AND_TOKEN_ATTEMPT_ACTION = 'USER_LOGIN_BY_ID_AND_TOKEN_ATTEMPT_ACTION';
+    export class UserLoginByIdAndTokenAttemptAction implements Action {
+        readonly type = USER_LOGIN_BY_ID_AND_TOKEN_ATTEMPT_ACTION;
+        constructor(public payload: { userId: string, token: string }) { }
+    }
+
     export const USER_LOGGED_IN_ACTION = 'USER_LOGGED_IN_ACTION';
     export class UserLoggedInAction implements Action {
         readonly type = USER_LOGGED_IN_ACTION;
@@ -62,6 +68,7 @@ export class ErrorOcurredAction implements Action {
 export type UIActions = UiStateTestAction
     | ToggleIsLoadingAction
     | UserLoginAttemptAction
+    | UserLoginByIdAndTokenAttemptAction
     | UserLoggedInAction
     | UserLoggedOutAction
     | CreateUserAction

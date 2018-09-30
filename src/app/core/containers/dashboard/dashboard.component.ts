@@ -23,7 +23,7 @@ export class DashboardComponent implements OnInit {
   name;
   animal;
   openDialog(): void {
-    let dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
       width: '250px',
       data: { name: this.name, animal: this.animal }
     });
@@ -56,11 +56,11 @@ export class DashboardComponent implements OnInit {
     }
     this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#fafafa';
     setTimeout(() => {
-      var ctx = document.getElementById("canvas");
-      var myChart = new Chart(ctx, {
+      const ctx = document.getElementById('canvas');
+      const myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange", "Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', 'Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
           datasets: [{
             label: '# of Votes',
             data: [12, 19, 3, 5, 2, 3, 12, 19, 3, 5, 2, 3],
@@ -106,12 +106,12 @@ export class DashboardComponent implements OnInit {
         }
       });
 
-      var ctx2 = document.getElementById("canvas2");
-      var data2 = {
+      const ctx2 = document.getElementById('canvas2');
+      const data2 = {
         datasets: [{
           data: [10, 20, 30],
           backgroundColor: ['rgba(255,99,132,.3)', 'rgba(54,162,235,.3)', 'rgba(255,205,86,.3)'],
-          borderColor: ['rgba(255,99,132,1)','rgba(54,162,235,1)','rgba(255,205,86,1)']
+          borderColor: ['rgba(255,99,132,1)', 'rgba(54,162,235,1)', 'rgba(255,205,86,1)']
         }],
 
         // These labels appear in the legend and in the tooltips when hovering different arcs
@@ -122,7 +122,7 @@ export class DashboardComponent implements OnInit {
         ]
       };
       // For a pie chart
-      var myPieChart = new Chart(ctx2, {
+      const myPieChart = new Chart(ctx2, {
         type: 'pie',
         data: data2,
         options: {}
@@ -137,6 +137,7 @@ export class DashboardComponent implements OnInit {
   selector: 'dialog-overview-example-dialog',
   templateUrl: 'dialog-overview-example-dialog.html',
 })
+// tslint:disable-next-line:component-class-suffix
 export class DialogOverviewExampleDialog {
 
   constructor(

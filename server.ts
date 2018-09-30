@@ -24,6 +24,7 @@ app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Expose-Headers');
     next();
 });
 
@@ -36,6 +37,9 @@ app.get('/*', (req, res) => {
 });
 
 //#region API Routes
+
+// POST /api/user
+// Create a user
 app.post('/api/user', (request, response) => {
     console.log('POST /api/user', request.body);
     const body = _.pick(request.body, [
@@ -90,9 +94,24 @@ app.post('/api/users/login', (request, response) => {
     (<any>User).findByCredentials(credentials.credential, credentials.password).then((user) => {
         // Send Back the user.
         return user.generateAuthToken().then((token) => {
+            console.log('Generated token:', token);
             response.header('x-auth', token).status(200).send(user);
         });
     }).catch((error) => {
+        response.status(404).send(error);
+    });
+});
+
+// POST /api/users/loginByIdAndToken
+app.post('/api/users/loginByIdAndToken', (request, response) => {
+    console.log('POST /api/user/loginByIdAndToken');
+    console.log('Request body: ', request.body);
+    const userId: string = <string>request.body.userId;
+    const token: string = <string>request.body.token;
+    console.log('Trying login with id and token');
+    (<any>User).findByToken(token).then((user) => {
+        response.header('x-auth', token).status(200).send(user);
+    }, (error) => {
         response.status(404).send(error);
     });
 });

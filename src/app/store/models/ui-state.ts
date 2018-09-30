@@ -1,4 +1,4 @@
-import { IUser } from "../../../shared/models/IUser";
+import { IUser } from '../../../shared/models/IUser';
 
 export interface IUIState {
     uiStateTestProperty: string;

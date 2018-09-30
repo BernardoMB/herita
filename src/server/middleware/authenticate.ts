@@ -2,7 +2,7 @@ const { User } = require('./../models/user');
 
 const authenticate = (request, response, next) => {
   const token = request.header('x-auth');
-
+  console.log('Authentication with token', token);
   // findByToken returns a promise so we call .then() to
   User.findByToken(token).then((user) => {
     // If there is no user whose token is the one provided, 

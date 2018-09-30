@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IApplicationState } from './store/models/app-state';
 import { Store } from '@ngrx/store';
-import { UiStateTestAction, ToggleIsLoadingAction, UserLoggedInAction } from './store/actions/uiState.actions';
+import { UserLoginByIdAndTokenAttemptAction } from './store/actions/uiState.actions';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { mapStateToUiStateTestPropperty } from './store/mappers/test-mappers';
@@ -9,6 +9,7 @@ import { ToastyConfig } from 'ng2-toasty';
 import { SlimLoadingBarService } from 'ng2-slim-loading-bar';
 import { CookieService } from 'ngx-cookie';
 import { IUser } from '../shared/models/IUser';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -23,20 +24,39 @@ export class AppComponent implements OnInit {
   public testStringObs: Observable<string>;
   public testStringSubscription: Subscription;
 
-  constructor (
+  constructor(
     private cookieService: CookieService,
     private store: Store<IApplicationState>,
     private toastyConfig: ToastyConfig,
+    private router: Router,
     private slimLoadingBarService: SlimLoadingBarService
   ) {
-    const usr = this.cookieService.getObject('usr');
+    toastyConfig.theme = 'material';
+
+    /* const usr = this.cookieService.getObject('usr');
     if (usr) {
       console.log('AppComponent: User found in cookies', usr);
       this.store.dispatch(new UserLoggedInAction(<IUser>usr));
     } else {
       console.log('AppComponent: No user found in cookies');
+    } */
+
+    const userId = <string>this.cookieService.getObject('userId');
+    const token = localStorage.getItem('x-auth');
+    if (userId && token !== 'null') {
+      console.log('App component: userId: ', userId);
+      console.log('App component: token: ', token);
+      this.store.dispatch(new UserLoginByIdAndTokenAttemptAction({
+        userId,
+        token
+      }));
+    } else {
+      console.log('App component: No user and token found in local storage');
+      localStorage.removeItem('x-auth');
+      this.cookieService.remove('userId');
+      console.log('App component: Redirecting to login page');
+      this.router.navigateByUrl('/login');
     }
-    toastyConfig.theme = 'material';
   }
 
   ngOnInit() {
@@ -62,10 +82,10 @@ export class AppComponent implements OnInit {
     this.slimLoadingBarService.start();
   }
   public stopLoading(): void {
-      this.slimLoadingBarService.stop();
+    this.slimLoadingBarService.stop();
   }
   public completeLoading(): void {
-      this.slimLoadingBarService.complete();
+    this.slimLoadingBarService.complete();
   }
 
 }

@@ -15,7 +15,9 @@ import { UIActions,
     CREATE_USER_ACTION,
     CreateUserAction,
     CREATED_USER_ACTION,
-    CreatedUserAction
+    CreatedUserAction,
+    USER_LOGIN_BY_ID_AND_TOKEN_ATTEMPT_ACTION,
+    UserLoginByIdAndTokenAttemptAction
 } from '../actions/uiState.actions';
 import { IStoreData } from '../models/store-data';
 
@@ -27,6 +29,8 @@ export function uiStateReducer(state: IUIState = INITIAL_UI_STATE, action: UIAct
             return handleToggleIsLoadingAction(state, action);
         case USER_LOGIN_ATTEMPT_ACTION:
             return handleUserLoginAttemptAction(state, action);
+        case USER_LOGIN_BY_ID_AND_TOKEN_ATTEMPT_ACTION:
+            return handleUserLoginByIdAndTokenAttemptAction(state, action);
         case USER_LOGGED_IN_ACTION:
             return handleUserLoggedInAction(state, action);
         case USER_LOGGED_OUT_ACTION:
@@ -54,8 +58,15 @@ function handleToggleIsLoadingAction(state: IUIState, action: ToggleIsLoadingAct
     return newUiState;
 }
 
-function handleUserLoginAttemptAction(state: IUIState, action: UserLoginAttemptAction) : IUIState {
+function handleUserLoginAttemptAction(state: IUIState, action: UserLoginAttemptAction): IUIState {
     console.log('handling UserLoginAttemptAction');
+    const newUiState = Object.assign({}, state, { isLoading: true});
+    newUiState.user = undefined;
+    return newUiState;
+}
+
+function handleUserLoginByIdAndTokenAttemptAction(state: IUIState, action: UserLoginByIdAndTokenAttemptAction): IUIState {
+    console.log('handling UserLoginByIdAndTokenAttemptAction');
     const newUiState = Object.assign({}, state, { isLoading: true});
     newUiState.user = undefined;
     return newUiState;

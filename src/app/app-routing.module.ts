@@ -1,15 +1,12 @@
 import { NgModule } from '@angular/core';
 import { AuthGuard } from './core/services/auth.guard';
 import { Routes, RouterModule } from '@angular/router';
-//#region Compoents  
-  import { MainComponent } from './core/containers/main/main.component';
-  import { LoginComponent } from './core/containers/login/login.component';
-  import { SignUpComponent } from './core/containers/sign-up/sign-up.component';
-  import { NotFoundComponent } from './core/containers/not-found/not-found.component';
-//#endregion
-//#region Children components
-  import { DashboardComponent } from './core/containers/dashboard/dashboard.component';
-//#endregion
+
+import { MainComponent } from './core/containers/main/main.component';
+import { LoginComponent } from './core/containers/login/login.component';
+import { SignUpComponent } from './core/containers/sign-up/sign-up.component';
+import { NotFoundComponent } from './core/containers/not-found/not-found.component';
+import { DashboardComponent } from './core/containers/dashboard/dashboard.component';
 
 const routes: Routes = [
   { path: '', component: MainComponent, canActivate: [AuthGuard], children: [

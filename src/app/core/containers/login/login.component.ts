@@ -42,21 +42,23 @@ export class LoginComponent implements OnInit, AfterViewInit {
     // If the property user of the uiState is not undefined, then navigate to home.
     this.userSubscription = this.store.select(state => state.uiState.user).subscribe(user => {
       if (user) {
-        console.log('Login: Found user in uiState', user);
-        console.log('Login: Redirecting to "/"');
+        console.log('Login component: Found user in uiState', user);
+        console.log('Login component: Redirecting to "/"');
         this.router.navigate(['/']);
       }
-      console.log('Login: No user in uiState');
-      console.log('Login: User must enter credentials');
+      console.log('Login component: No user in uiState');
+      console.log('Login component: User must enter credentials');
     });
     this.userService.passLoginError.subscribe(payload => {
       this.loginTypeError = payload[1];
       if (this.loginTypeError === 0) {
-        // No error from server.
+        // No error from server
+        console.log('Login component: no login error recieved', payload);
         this.loginErrorOcurred = false;
         this.loginErrorMessage = null;
       } else {
-        console.log('Login: recieved login error', payload);
+        // Got error from server
+        console.log('Login component: recieved login error', payload);
         this.loginErrorOcurred = true;
         this.loginErrorMessage = payload[0];
       }
@@ -79,7 +81,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
       credential: this.loginForm.value.username,
       password: this.loginForm.value.password
     }
-    console.log('Dispatching UserLoginAttemptAction with credentials', credentials);
+    console.log('Login component: Dispatching UserLoginAttemptAction with credentials', credentials);
     this.store.dispatch(new UserLoginAttemptAction(credentials));
   }
 

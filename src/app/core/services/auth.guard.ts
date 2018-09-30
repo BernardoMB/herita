@@ -11,6 +11,7 @@ export class AuthGuard implements CanActivate {
     canActivate(next: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
     ): Observable<boolean> | Promise<boolean> | boolean {
+        // tslint:disable-next-line:no-shadowed-variable
         return this.store.select(state => state.uiState.user)
             .switchMap(currentUser => {
                 if (!!currentUser) {
