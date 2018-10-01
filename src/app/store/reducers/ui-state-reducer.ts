@@ -22,6 +22,7 @@ import { UIActions,
 import { IStoreData } from '../models/store-data';
 
 export function uiStateReducer(state: IUIState = INITIAL_UI_STATE, action: UIActions): IUIState {
+    console.log('Reducer handling', action.type);
     switch (action.type) {
         case UI_STATE_TEST_ACTION:
             return handleUiStateTestAction(state, action);
@@ -59,14 +60,12 @@ function handleToggleIsLoadingAction(state: IUIState, action: ToggleIsLoadingAct
 }
 
 function handleUserLoginAttemptAction(state: IUIState, action: UserLoginAttemptAction): IUIState {
-    console.log('handling UserLoginAttemptAction');
     const newUiState = Object.assign({}, state, { isLoading: true});
     newUiState.user = undefined;
     return newUiState;
 }
 
 function handleUserLoginByIdAndTokenAttemptAction(state: IUIState, action: UserLoginByIdAndTokenAttemptAction): IUIState {
-    console.log('handling UserLoginByIdAndTokenAttemptAction');
     const newUiState = Object.assign({}, state, { isLoading: true});
     newUiState.user = undefined;
     return newUiState;

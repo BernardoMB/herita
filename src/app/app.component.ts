@@ -33,19 +33,12 @@ export class AppComponent implements OnInit {
   ) {
     toastyConfig.theme = 'material';
 
-    /* const usr = this.cookieService.getObject('usr');
-    if (usr) {
-      console.log('AppComponent: User found in cookies', usr);
-      this.store.dispatch(new UserLoggedInAction(<IUser>usr));
-    } else {
-      console.log('AppComponent: No user found in cookies');
-    } */
-
     const userId = <string>this.cookieService.getObject('userId');
     const token = localStorage.getItem('x-auth');
     if (userId && token !== 'null') {
       console.log('App component: userId: ', userId);
       console.log('App component: token: ', token);
+      console.log('Dispatching UserLoginByIdAndTokenAttemptAction');
       this.store.dispatch(new UserLoginByIdAndTokenAttemptAction({
         userId,
         token

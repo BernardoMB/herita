@@ -22,7 +22,8 @@ import {
     UserLoggedOutAction,
     USER_LOGOUT_ATTEMPT_ACTION,
     USER_LOGIN_BY_ID_AND_TOKEN_ATTEMPT_ACTION,
-    UserLoginByIdAndTokenAttemptAction
+    UserLoginByIdAndTokenAttemptAction,
+    UserLogoutAttemptAction
 } from '../actions/uiState.actions';
 import { UserService } from '../../core/services/user.service';
 import { ILoginModel } from '../../core/containers/login/login.component';
@@ -107,9 +108,8 @@ export class UserEffectService {
         .ofType(USER_LOGGED_IN_ACTION)
         .debug('Effect: User logged in')
         .do((action: UserLoggedInAction) => {
-            this.cookieService.putObject('usr', action.payload, { /* expires: moment().hours(11).minute(59).second(59).toDate() */ });
-            const usr = this.cookieService.getObject('usr');
-            console.log('Effect: placed user cookie', usr);
+            const userId = this.cookieService.getObject('userId');
+            console.log('Effect: placed userId cookie', userId);
             setTimeout(() => {
                 this.toastyService.success({
                     title: 'Logged in',
@@ -123,8 +123,8 @@ export class UserEffectService {
     @Effect()
     onUserLogoutAttempt$: Observable<Action> = this.action$
         .ofType(USER_LOGOUT_ATTEMPT_ACTION)
-        .debug('User logged out')
-        .switchMap((action: UserLoggedOutAction) => this.userService.logout(action.payload)
+        .debug('Attempting to logout')
+        .switchMap((action: UserLogoutAttemptAction) => this.userService.logout(action.payload)
             .map(() => {
                 return new UserLoggedOutAction();
             }).catch((err: string) => {
@@ -139,6 +139,7 @@ export class UserEffectService {
         .debug('Effect: user Logged out')
         .do((action: UserLoggedOutAction) => {
             this.cookieService.remove('usr');
+            localStorage.removeItem('x-auth');
             this.toastyService.success({
                 title: 'Logged out',
                 msg: `${moment().locale('US').calendar()}`,

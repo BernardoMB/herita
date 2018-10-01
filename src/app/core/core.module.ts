@@ -21,12 +21,14 @@ import { UserService } from './services/user.service';
 import { DashboardComponent, DialogOverviewExampleDialog } from './containers/dashboard/dashboard.component';
 import { RouterModule } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material';
+import { HttpClient, HttpHandler, HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
     FormsModule,
+    HttpClientModule,
     ReactiveFormsModule,
     // Material components
     MaterialComponentsModule,
@@ -64,17 +66,17 @@ import { MatDialog, MatDialogModule } from '@angular/material';
 })
 export class CoreModule {
 
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: CoreModule,
+      providers: [AuthGuard, UserService, MatDialog, HttpClient]
+    };
+  }
+
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
     if (parentModule) {
       throw new Error('Error, core module already exists.');
     }
   }
-
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: CoreModule,
-      providers: [AuthGuard, UserService, MatDialog]
-    };
-  }
-
+  
 }

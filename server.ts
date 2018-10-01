@@ -23,8 +23,8 @@ app.use(function (req, res, next) {
     // set headers to allow cross origin request.
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+    res.header('Access-Control-Expose-Headers', 'x-auth');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    res.header('Access-Control-Expose-Headers');
     next();
 });
 
@@ -84,18 +84,20 @@ app.post('/api/user', (request, response) => {
 });
 
 // POST /api/users/login
-// Every time a user logs in a new token will be generated for that user.
+// Every time a user logs in a new token will be generated for that user
 app.post('/api/users/login', (request, response) => {
     console.log('POST /api/user/login');
     console.log('Request body: ', request.body);
     const credentials: ILoginModel = _.pick(request.body, ['credential', 'password']);
     console.log('Trying login with credentials:', credentials);
-    // We will use a custom model method.
+    // We will use a custom model method
     (<any>User).findByCredentials(credentials.credential, credentials.password).then((user) => {
-        // Send Back the user.
+        // Send back the user and a new token
         return user.generateAuthToken().then((token) => {
             console.log('Generated token:', token);
-            response.header('x-auth', token).status(200).send(user);
+            setTimeout(() => {
+                response.header('x-auth', token).status(200).json({ user });
+            }, 0);
         });
     }).catch((error) => {
         response.status(404).send(error);
@@ -103,14 +105,22 @@ app.post('/api/users/login', (request, response) => {
 });
 
 // POST /api/users/loginByIdAndToken
+// Login but do not generate a new token
 app.post('/api/users/loginByIdAndToken', (request, response) => {
     console.log('POST /api/user/loginByIdAndToken');
     console.log('Request body: ', request.body);
+    const headertoken = request.header('x-auth');
+    console.log('TAKEN:', headertoken);
     const userId: string = <string>request.body.userId;
     const token: string = <string>request.body.token;
     console.log('Trying login with id and token');
+    // We will use a custom model method
     (<any>User).findByToken(token).then((user) => {
-        response.header('x-auth', token).status(200).send(user);
+        // Send back the user and the used token
+        console.log('Used token:', token);
+        setTimeout(() => {
+            response.header('x-auth', token).status(200).json({ user });
+        }, 0);
     }, (error) => {
         response.status(404).send(error);
     });
