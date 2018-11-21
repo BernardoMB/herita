@@ -27,6 +27,7 @@ import {
 } from '../actions/uiState.actions';
 import { UserService } from '../../core/services/user.service';
 import { ILoginModel } from '../../core/containers/login/login.component';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class UserEffectService {
@@ -140,6 +141,7 @@ export class UserEffectService {
         .do((action: UserLoggedOutAction) => {
             this.cookieService.remove('usr');
             localStorage.removeItem('x-auth');
+            this.router.navigate(['/login']);
             this.toastyService.success({
                 title: 'Logged out',
                 msg: `${moment().locale('US').calendar()}`,
@@ -179,7 +181,8 @@ export class UserEffectService {
         public toastyService: ToastyService,
         public toastyConfig: ToastyConfig,
         private cookieService: CookieService,
-        private userService: UserService
+        private userService: UserService,
+        private router: Router
     ) {
         this.toastyConfig.theme = 'material';
         this.toastyConfig.position = 'bottom-center';

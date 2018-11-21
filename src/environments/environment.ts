@@ -6,7 +6,7 @@
 export const environment = {
   production: false,
   // IPv6 Address:
-  //url: 'http://10.123.1.203:300'
+  url: 'http://10.123.1.149:300'
   // Local:
-  url: 'http://localhost:300' 
+  //url: 'http://localhost:300' 
 };

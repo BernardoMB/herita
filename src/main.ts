@@ -37,7 +37,7 @@ Observable.prototype.debug = function(message: string) {
         },
         () => {
             if (debuggerOn) {
-                console.error("Observable completed - ", message)
+                console.error('Observable completed - ', message);
             }
         }
     );

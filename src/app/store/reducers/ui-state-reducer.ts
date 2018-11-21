@@ -78,6 +78,7 @@ function handleUserLoggedInAction(state: IUIState, action: UserLoggedInAction): 
 }
 
 function handleUserLoggedOutAction(state: IUIState, action: UserLoggedOutAction): IUIState {
+    console.log('Reducer: handling user logged out action');
     return INITIAL_UI_STATE;
 }
 

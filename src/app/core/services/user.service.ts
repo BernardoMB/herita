@@ -86,7 +86,7 @@ export class UserService {
                 'Content-Type': 'application/json',
                 'x-auth': token
             })
-        }).map(response => response).catch(err => Observable.throw(err));
+        }).catch(error => Observable.throw(error));
     }
 
     public createUser(user: IUser): Observable<IUser> {

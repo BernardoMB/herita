@@ -33,12 +33,12 @@
 <mat-sidenav-container (backdropClick)="closeSidenav('Backdrop')">
 
   <!-- SIDENAV -->
-  <mat-sidenav style="display:flex; flex-direction:column; width:60%;" #sidenav (keydown.escape)="closeSidenav('escape')" disableClose>
+  <mat-sidenav style="display:flex; flex-direction:column;" #sidenav (keydown.escape)="closeSidenav('escape')" disableClose>
     <div>
       {{ username }}
     </div>
     <div style="display:flex; justify-content:center">
-      <button mat-raised-button [color]="'accent'" (click)="onLogOut()" style="width: 80%; margin-top: 10px; margin-bottom: 10px; color: white; box-shadow: 0 10px 20px 0px rgba(0,0,0,.2), 0 -5px 20px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);">LOG OUT</button>
+      <button mat-raised-button [color]="'accent'" (click)="onLogOut()" style="width: 80%; margin: 10px; color: white; box-shadow: 0 10px 20px 0px rgba(0,0,0,.2), 0 -5px 20px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);">LOG OUT</button>
     </div>
   </mat-sidenav>
 

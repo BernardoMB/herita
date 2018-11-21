@@ -24,6 +24,7 @@ import { CookieModule } from 'ngx-cookie';
     BrowserAnimationsModule,
     //NoopAnimationsModule, // Uncoment this line if device is too slow to render animations properly
     // My modules
+    // Note: Angular material module will be imported in the CoreModule
     CoreModule.forRoot(), // Call forRoot() so all services in the CoreModule are singleton
     // NgRx
     NgRxModule

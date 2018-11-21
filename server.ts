@@ -2,6 +2,7 @@ require('./src/server/config/config.ts');
 
 import * as express from 'express';
 import * as path from 'path';
+import * as chalk from 'chalk';
 
 const { authenticate } = require('./src/server/middleware/authenticate');
 const { mongoose } = require('./src/server/db/mongoose');
@@ -19,12 +20,12 @@ const port = process.env.PORT;
 
 app.use(bodyParser.json());
 app.use(cors());
-app.use(function (req, res, next) {
+app.use(function (request, response, next) {
     // set headers to allow cross origin request.
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-    res.header('Access-Control-Expose-Headers', 'x-auth');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    response.header('Access-Control-Allow-Origin', '*');
+    response.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+    response.header('Access-Control-Expose-Headers', 'x-auth');
+    response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
 });
 
@@ -86,7 +87,7 @@ app.post('/api/user', (request, response) => {
 // POST /api/users/login
 // Every time a user logs in a new token will be generated for that user
 app.post('/api/users/login', (request, response) => {
-    console.log('POST /api/user/login');
+    console.log(chalk.default.greenBright('POST /api/user/login'));
     console.log('Request body: ', request.body);
     const credentials: ILoginModel = _.pick(request.body, ['credential', 'password']);
     console.log('Trying login with credentials:', credentials);
@@ -127,12 +128,13 @@ app.post('/api/users/loginByIdAndToken', (request, response) => {
 });
 
 // DELETE /api/user/me
-app.delete('/api/user/me/token/:id', authenticate, (request: any, res) => {
+app.delete('/api/user/me/token/:id', authenticate, (request: any, response) => {
     console.log('REQUEST TOKEN: ', request.token);
     request.user.removeToken(request.token).then(() => {
-        res.status(200).send();
-    }, () => {
-        res.status(400).send();
+        console.log('SENDING STATUS 200 RESPONSE ');
+        response.status(200).json({});
+    }, (error) => {
+        response.status(400).send(error);
     });
 });
 //#endregion
